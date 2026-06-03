@@ -27,7 +27,7 @@ body { background:var(--charcoal);  color:var(--white); font-family:'Outfit',san
 
 /* ── LOGIN ── */
 .login-screen {
-  position:fixed; inset:0; background:var(--black);
+  position:fixed; inset:0; background:#141416;
   display:flex; align-items:center; justify-content:center;
   z-index:1000; flex-direction:column; gap:0;
 }
@@ -41,29 +41,29 @@ body { background:var(--charcoal);  color:var(--white); font-family:'Outfit',san
 
 .login-title {
   font-family:'Bebas Neue',sans-serif;
-  font-size:48px; letter-spacing:3px; color:var(--white);
+  font-size:48px; letter-spacing:3px; color:#FFFFFF;
   text-align:center; line-height:1; margin-bottom:6px;
 }
 .login-sub {
   font-family:'Space Mono',monospace; font-size:9px;
-  letter-spacing:3px; color:var(--light); text-transform:uppercase;
+  letter-spacing:3px; color:#999; text-transform:uppercase;
   text-align:center; margin-bottom:48px;
 }
 
 .login-field { margin-bottom:16px; }
 .login-label {
   font-family:'Space Mono',monospace; font-size:9px;
-  letter-spacing:2px; color:var(--light); text-transform:uppercase;
+  letter-spacing:2px; color:#AEAEB2; text-transform:uppercase;
   margin-bottom:8px; display:block;
 }
 .login-input {
-  width:100%; background:var(--charcoal); border:1px solid var(--gray);
+  width:100%; background:#242426; border:1px solid #3A3A3C;
   border-radius:10px; padding:14px 16px; font-family:'Outfit',sans-serif;
-  font-size:15px; color:var(--white); outline:none;
+  font-size:15px; color:#FFFFFF; outline:none;
   transition:border-color 0.2s;
 }
 .login-input:focus { border-color:var(--red); }
-.login-input::placeholder { color:var(--mid); }
+.login-input::placeholder { color:#6E6E73; }
 
 .login-btn {
   width:100%; margin-top:8px; padding:16px;
@@ -120,7 +120,7 @@ body { background:var(--charcoal);  color:var(--white); font-family:'Outfit',san
 .sidebar-nav { flex:1; padding:16px 0; }
 .nav-section-label {
   font-family:'Space Mono',monospace; font-size:8px;
-  letter-spacing:3px; color:var(--mid); text-transform:uppercase;
+  letter-spacing:3px; color:#6E6E73; text-transform:uppercase;
   padding:8px 24px 6px; display:block;
 }
 .nav-item {
@@ -159,35 +159,36 @@ body { background:var(--charcoal);  color:var(--white); font-family:'Outfit',san
 /* ── MAIN ── */
 .main {
   flex:1; display:flex; flex-direction:column; overflow:hidden;
+  background:#F0EEE9;
 }
 
 .topbar {
-  background:var(--charcoal); padding:20px 32px;
+  background:#F0EEE9; padding:20px 32px;
   display:flex; align-items:center; justify-content:space-between;
-  border-bottom:1px solid rgba(255,255,255,0.05);
+  border-bottom:1px solid #E0DDD6;
   flex-shrink:0;
 }
 .topbar-title {
   font-family:'Bebas Neue',sans-serif;
-  font-size:28px; letter-spacing:2px; color:var(--white);
+  font-size:28px; letter-spacing:2px; color:#060606;
 }
 .topbar-sub {
   font-family:'Space Mono',monospace; font-size:9px;
-  letter-spacing:2px; color:var(--light); margin-top:2px;
+  letter-spacing:2px; color:#888; margin-top:2px;
 }
 
 .topbar-actions { display:flex; gap:10px; align-items:center; }
 
 .search-wrap { position:relative; }
 .search-input {
-  background:var(--dark); border:1px solid var(--gray);
+  background:#FFFFFF; border:1px solid #D5D2CB;
   border-radius:8px; padding:9px 14px 9px 36px;
   font-family:'Outfit',sans-serif; font-size:13px;
-  color:var(--white); outline:none; width:220px;
+  color:#1A1A1A; outline:none; width:220px;
   transition:border-color 0.2s;
 }
 .search-input:focus { border-color:var(--red); }
-.search-input::placeholder { color:var(--mid); }
+.search-input::placeholder { color:#BBB; }
 .search-icon {
   position:absolute; left:12px; top:50%;
   transform:translateY(-50%); color:var(--mid); font-size:12px;
@@ -195,9 +196,9 @@ body { background:var(--charcoal);  color:var(--white); font-family:'Outfit',san
 
 .btn-refresh {
   padding:9px 16px; background:transparent;
-  border:1px solid var(--gray); border-radius:8px;
+  border:1px solid #D5D2CB; border-radius:8px;
   font-family:'Space Mono',monospace; font-size:9px;
-  letter-spacing:2px; color:var(--light); cursor:pointer;
+  letter-spacing:2px; color:#888; cursor:pointer;
   text-transform:uppercase; transition:all 0.2s;
 }
 .btn-refresh:hover { border-color:var(--red); color:var(--red); }
@@ -208,24 +209,24 @@ body { background:var(--charcoal);  color:var(--white); font-family:'Outfit',san
 /* ── STATS ROW ── */
 .stats-row { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:28px; }
 .stat-card {
-  background:var(--dark); border-radius:12px; padding:20px 24px;
-  border:1px solid rgba(255,255,255,0.04);
+  background:#FFFFFF; border-radius:12px; padding:20px 24px;
+  border:1px solid #E0DDD6;
   transition:border-color 0.2s;
 }
 .stat-card:hover { border-color:rgba(204,0,0,0.3); }
 .stat-card:first-child { background:var(--red); border-color:transparent; }
 .stat-label {
   font-family:'Space Mono',monospace; font-size:8px;
-  letter-spacing:2px; color:rgba(255,255,255,0.4);
+  letter-spacing:2px; color:#AAA;
   text-transform:uppercase; margin-bottom:10px; display:block;
 }
 .stat-card:first-child .stat-label { color:rgba(255,255,255,0.6); }
 .stat-num {
   font-family:'Bebas Neue',sans-serif; font-size:40px;
-  letter-spacing:1px; color:var(--white); line-height:1;
+  letter-spacing:1px; color:#060606; line-height:1;
 }
 .stat-trend {
-  font-size:11px; color:rgba(255,255,255,0.3);
+  font-size:11px; color:#AAA;
   margin-top:4px; font-weight:300;
 }
 .stat-card:first-child .stat-trend { color:rgba(255,255,255,0.6); }
@@ -238,36 +239,56 @@ body { background:var(--charcoal);  color:var(--white); font-family:'Outfit',san
   display:flex; gap:8px; margin-bottom:20px; flex-wrap:wrap;
 }
 .filter-chip {
-  padding:6px 14px; border:1px solid var(--gray); border-radius:100px;
-  font-size:12px; color:var(--light); cursor:pointer;
-  transition:all 0.15s; background:transparent;
+  padding:6px 14px; border:1px solid #D5D2CB; border-radius:100px;
+  font-size:12px; color:#666; cursor:pointer;
+  transition:all 0.15s; background:#FFFFFF;
   font-family:'Outfit',sans-serif;
 }
 .filter-chip:hover { border-color:var(--red); color:var(--red); }
 .filter-chip.active { background:var(--red); border-color:var(--red); color:var(--white); }
 
-.filter-select {
-  padding:7px 14px; border:1px solid var(--gray); border-radius:100px;
-  font-size:12px; color:var(--light); cursor:pointer;
-  background:var(--dark); font-family:'Outfit',sans-serif;
-  outline:none; transition:all 0.15s;
+.adv-filters {
+  background:#FFFFFF; border-radius:12px; padding:16px 20px;
+  border:1px solid #E0DDD6; margin-bottom:16px;
+  display:flex; flex-direction:column; gap:12px;
 }
-.filter-select:focus { border-color:var(--red); color:var(--white); }
+.adv-filter-group { display:flex; align-items:flex-start; gap:12px; }
+.adv-filter-label {
+  font-family:'Space Mono',monospace; font-size:8px;
+  letter-spacing:2px; text-transform:uppercase; color:#AAA;
+  white-space:nowrap; padding-top:8px; min-width:72px;
+}
+.adv-chips { display:flex; flex-wrap:wrap; gap:6px; }
+.adv-chip {
+  padding:5px 12px; border:1px solid #D5D2CB; border-radius:100px;
+  font-size:12px; color:#666; background:#F5F3EE;
+  cursor:pointer; transition:all 0.15s; user-select:none;
+  font-family:'Outfit',sans-serif;
+}
+.adv-chip:hover { border-color:var(--red); color:var(--red); }
+.adv-chip.selected { background:var(--red); border-color:var(--red); color:#FFFFFF; font-weight:500; }
+.clear-filters-btn {
+  padding:5px 14px; background:transparent; border:1px solid #D5D2CB;
+  border-radius:100px; font-size:11px; color:#AAA; cursor:pointer;
+  font-family:'Space Mono',monospace; letter-spacing:1px;
+  transition:all 0.15s;
+}
+.clear-filters-btn:hover { border-color:var(--red); color:var(--red); }
 
 /* ── CARDS GRID ── */
-.cards-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:12px; }
+.cards-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:12px; }
 
 /* ── EMPRESA CARD ── */
 .empresa-card {
-  background:var(--dark); border-radius:14px;
-  border:1px solid rgba(255,255,255,0.05);
+  background:#FFFFFF; border-radius:14px;
+  border:1px solid #E0DDD6;
   overflow:hidden; cursor:pointer;
   transition:transform 0.2s, border-color 0.2s, box-shadow 0.2s;
 }
 .empresa-card:hover {
   transform:translateY(-2px);
-  border-color:rgba(204,0,0,0.3);
-  box-shadow:0 8px 32px rgba(0,0,0,0.4);
+  border-color:rgba(204,0,0,0.4);
+  box-shadow:0 8px 24px rgba(0,0,0,0.1);
 }
 .empresa-card-header {
   padding:20px 20px 16px;
@@ -281,12 +302,12 @@ body { background:var(--charcoal);  color:var(--white); font-family:'Outfit',san
 }
 .empresa-info { flex:1; min-width:0; }
 .empresa-name {
-  font-weight:600; font-size:15px; color:var(--white);
+  font-weight:600; font-size:15px; color:#060606;
   white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
   margin-bottom:2px;
 }
 .empresa-contact {
-  font-size:12px; color:var(--light); font-weight:300;
+  font-size:12px; color:#888; font-weight:300;
   white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
 }
 .empresa-status { flex-shrink:0; }
@@ -307,13 +328,13 @@ body { background:var(--charcoal);  color:var(--white); font-family:'Outfit',san
   display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px;
 }
 .empresa-tag {
-  font-size:11px; color:var(--mid);
-  background:rgba(255,255,255,0.04);
+  font-size:11px; color:#666;
+  background:#F5F3EE;
   padding:3px 10px; border-radius:100px;
-  border:1px solid rgba(255,255,255,0.06);
+  border:1px solid #E0DDD6;
 }
 .empresa-objetivo {
-  font-size:12px; color:rgba(255,255,255,0.5);
+  font-size:12px; color:#888;
   font-weight:300; line-height:1.5;
   display:-webkit-box; -webkit-line-clamp:2;
   -webkit-box-orient:vertical; overflow:hidden;
@@ -321,26 +342,26 @@ body { background:var(--charcoal);  color:var(--white); font-family:'Outfit',san
 
 .empresa-card-footer {
   padding:12px 20px;
-  border-top:1px solid rgba(255,255,255,0.05);
+  border-top:1px solid #F0EEE9;
   display:flex; align-items:center; justify-content:space-between;
 }
 .empresa-footer-date {
   font-family:'Space Mono',monospace; font-size:8px;
-  letter-spacing:1px; color:var(--mid);
+  letter-spacing:1px; color:#AAA;
 }
 .empresa-footer-arrow { color:var(--red); font-size:14px; }
 
 /* ── EMBAJADOR CARD ── */
 .embajador-card {
-  background:var(--dark); border-radius:14px;
-  border:1px solid rgba(255,255,255,0.05);
+  background:#FFFFFF; border-radius:14px;
+  border:1px solid #E0DDD6;
   overflow:hidden; cursor:pointer;
   transition:transform 0.2s, border-color 0.2s, box-shadow 0.2s;
 }
 .embajador-card:hover {
   transform:translateY(-2px);
-  border-color:rgba(204,0,0,0.3);
-  box-shadow:0 8px 32px rgba(0,0,0,0.4);
+  border-color:rgba(204,0,0,0.4);
+  box-shadow:0 8px 24px rgba(0,0,0,0.1);
 }
 .embajador-card-header { padding:20px 20px 14px; display:flex; gap:14px; align-items:flex-start; }
 .embajador-avatar {
@@ -351,7 +372,7 @@ body { background:var(--charcoal);  color:var(--white); font-family:'Outfit',san
   flex-shrink:0;
 }
 .embajador-info { flex:1; min-width:0; }
-.embajador-name { font-weight:600; font-size:15px; color:var(--white); margin-bottom:2px; }
+.embajador-name { font-weight:600; font-size:15px; color:#060606; margin-bottom:2px; }
 .embajador-ig { font-family:'Space Mono',monospace; font-size:10px; color:var(--red); letter-spacing:1px; }
 .embajador-followers {
   margin-left:auto; text-align:right; flex-shrink:0;
@@ -361,20 +382,20 @@ body { background:var(--charcoal);  color:var(--white); font-family:'Outfit',san
 
 .embajador-tags { padding:0 20px 14px; display:flex; flex-wrap:wrap; gap:6px; }
 .interest-tag {
-  font-size:11px; color:var(--light);
-  background:rgba(255,255,255,0.05);
+  font-size:11px; color:#666;
+  background:#F5F3EE;
   padding:3px 10px; border-radius:100px;
-  border:1px solid rgba(255,255,255,0.07);
+  border:1px solid #E0DDD6;
 }
 
 .embajador-card-footer {
   padding:12px 20px;
-  border-top:1px solid rgba(255,255,255,0.05);
+  border-top:1px solid #F0EEE9;
   display:flex; gap:8px; align-items:center;
 }
 .embajador-zona {
   font-family:'Space Mono',monospace; font-size:8px;
-  color:var(--mid); letter-spacing:1px; flex:1;
+  color:#AAA; letter-spacing:1px; flex:1;
 }
 
 /* ── MODAL ── */
@@ -466,31 +487,31 @@ body { background:var(--charcoal);  color:var(--white); font-family:'Outfit',san
 }
 .save-btn:hover { background:var(--red-dark); }
 .view-toggle {
-  padding:6px 14px; border:1px solid var(--gray); border-radius:8px;
-  font-size:11px; color:var(--light); cursor:pointer; background:transparent;
+  padding:6px 14px; border:1px solid #D5D2CB; border-radius:8px;
+  font-size:11px; color:#888; cursor:pointer; background:#FFFFFF;
   font-family:'Outfit',sans-serif; transition:all 0.15s;
 }
 .view-toggle:hover { border-color:var(--red); color:var(--red); }
-.view-toggle.active { background:var(--gray); color:var(--white); border-color:var(--gray); }
+.view-toggle.active { background:#1A1A1A; color:#FFFFFF; border-color:#1A1A1A; }
 
 /* List view styles */
 .cards-list { display:flex; flex-direction:column; gap:2px; }
 .list-row {
-  background:var(--dark); border-radius:10px; padding:14px 20px;
+  background:#FFFFFF; border-radius:10px; padding:14px 20px;
   display:grid; grid-template-columns:2fr 1fr 1fr 1fr auto;
   align-items:center; gap:16px; cursor:pointer;
-  transition:background 0.15s; border:1px solid rgba(255,255,255,0.04);
+  transition:background 0.15s; border:1px solid #E0DDD6;
 }
-.list-row:hover { background:#2A2A2C; border-color:rgba(204,0,0,0.2); }
-.list-name { font-size:14px; font-weight:500; color:var(--white); }
-.list-sub { font-size:11px; color:var(--mid); margin-top:2px; }
-.list-cell { font-size:12px; color:var(--light); }
+.list-row:hover { background:#FAF8F5; border-color:rgba(204,0,0,0.3); }
+.list-name { font-size:14px; font-weight:500; color:#060606; }
+.list-sub { font-size:11px; color:#AAA; margin-top:2px; }
+.list-cell { font-size:12px; color:#666; }
 .list-header {
   padding:8px 20px; display:grid;
   grid-template-columns:2fr 1fr 1fr 1fr auto;
   gap:16px; margin-bottom:4px;
 }
-.list-header-cell { font-family:'Space Mono',monospace; font-size:8px; letter-spacing:2px; color:var(--mid); text-transform:uppercase; }
+.list-header-cell { font-family:'Space Mono',monospace; font-size:8px; letter-spacing:2px; color:#AAA; text-transform:uppercase; }
 
 .delete-btn {
   width:100%; padding:12px; background:transparent;
@@ -514,7 +535,7 @@ body { background:var(--charcoal);  color:var(--white); font-family:'Outfit',san
 @keyframes spin { to { transform:rotate(360deg); } }
 .loading-text {
   font-family:'Space Mono',monospace; font-size:9px;
-  letter-spacing:3px; color:var(--mid); text-transform:uppercase;
+  letter-spacing:3px; color:#AAA; text-transform:uppercase;
 }
 
 .empty-state {
@@ -522,7 +543,7 @@ body { background:var(--charcoal);  color:var(--white); font-family:'Outfit',san
   justify-content:center; padding:80px 32px; gap:12px; text-align:center;
 }
 .empty-icon { font-size:40px; color:var(--gray); }
-.empty-text { font-size:14px; color:var(--mid); font-weight:300; }
+.empty-text { font-size:14px; color:#AAA; font-weight:300; }
 
 /* ── VIEW PANELS ── */
 .view-panel { display:none; }
@@ -680,46 +701,77 @@ body { background:var(--charcoal);  color:var(--white); font-family:'Outfit',san
           <button class="view-toggle active" id="emb-grid-btn" onclick="setEmbView('grid')">⊞ Tarjetas</button>
           <button class="view-toggle" id="emb-list-btn" onclick="setEmbView('list')">≡ Lista</button>
         </div>
-        <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;align-items:center;">
-          <select class="filter-select" id="filter-zona" onchange="applyEmbajadorFilters()">
-            <option value="">Zona MTY</option>
-            <option>San Pedro / Valle</option>
-            <option>MTY Centro</option>
-            <option>Cumbres</option>
-            <option>Contry</option>
-            <option>Del Valle / Obispado</option>
-            <option>Mitras / Roma</option>
-            <option>Santa Catarina</option>
-            <option>Apodaca / Escobedo</option>
-            <option>Guadalupe / Juárez</option>
-            <option>Toda la ZMM</option>
-          </select>
-          <select class="filter-select" id="filter-nse" onchange="applyEmbajadorFilters()">
-            <option value="">NSE</option>
-            <option>A/B · Alto</option>
-            <option>C+ · Medio alto</option>
-            <option>C · Clase media</option>
-            <option>D+ · Emergente</option>
-          </select>
-          <select class="filter-select" id="filter-seguidores" onchange="applyEmbajadorFilters()">
-            <option value="">Seguidores</option>
-            <option>500 – 1.5K</option>
-            <option>1.5K – 3K</option>
-            <option>3K – 5K</option>
-            <option>5K – 10K</option>
-            <option>10K – 20K</option>
-            <option>20K – 50K</option>
-            <option>50K – 100K</option>
-            <option>100K – 500K</option>
-            <option>500K+</option>
-          </select>
-          <select class="filter-select" id="filter-genero" onchange="applyEmbajadorFilters()">
-            <option value="">Género</option>
-            <option>Hombre</option>
-            <option>Mujer</option>
-            <option>Otro</option>
-          </select>
-          <button class="filter-chip" onclick="clearEmbajadorFilters()" style="font-size:11px;padding:6px 12px;">✕ Limpiar</button>
+        <!-- ADVANCED FILTERS -->
+        <div class="adv-filters" id="advFilters">
+          <div class="adv-filter-group">
+            <span class="adv-filter-label">Zona MTY</span>
+            <div class="adv-chips" id="filter-zona">
+              <span class="adv-chip" data-val="San Pedro / Valle">San Pedro / Valle</span>
+              <span class="adv-chip" data-val="MTY Centro">MTY Centro</span>
+              <span class="adv-chip" data-val="Cumbres">Cumbres</span>
+              <span class="adv-chip" data-val="Contry">Contry</span>
+              <span class="adv-chip" data-val="Del Valle / Obispado">Del Valle / Obispado</span>
+              <span class="adv-chip" data-val="Mitras / Roma">Mitras / Roma</span>
+              <span class="adv-chip" data-val="Santa Catarina">Santa Catarina</span>
+              <span class="adv-chip" data-val="Apodaca / Escobedo">Apodaca / Escobedo</span>
+              <span class="adv-chip" data-val="Guadalupe / Juárez">Guadalupe / Juárez</span>
+              <span class="adv-chip" data-val="Toda la ZMM">Toda la ZMM</span>
+            </div>
+          </div>
+          <div class="adv-filter-group">
+            <span class="adv-filter-label">NSE</span>
+            <div class="adv-chips" id="filter-nse">
+              <span class="adv-chip" data-val="A/B">A/B · Alto</span>
+              <span class="adv-chip" data-val="C+">C+ · Medio alto</span>
+              <span class="adv-chip" data-val="C ·">C · Clase media</span>
+              <span class="adv-chip" data-val="D+">D+ · Emergente</span>
+            </div>
+          </div>
+          <div class="adv-filter-group">
+            <span class="adv-filter-label">Seguidores</span>
+            <div class="adv-chips" id="filter-seguidores">
+              <span class="adv-chip" data-val="500 – 1.5K">500 – 1.5K</span>
+              <span class="adv-chip" data-val="1.5K – 3K">1.5K – 3K</span>
+              <span class="adv-chip" data-val="3K – 5K">3K – 5K</span>
+              <span class="adv-chip" data-val="5K – 10K">5K – 10K</span>
+              <span class="adv-chip" data-val="10K – 20K">10K – 20K</span>
+              <span class="adv-chip" data-val="20K – 50K">20K – 50K</span>
+              <span class="adv-chip" data-val="50K – 100K">50K – 100K</span>
+              <span class="adv-chip" data-val="100K – 500K">100K – 500K</span>
+              <span class="adv-chip" data-val="500K+">500K+</span>
+            </div>
+          </div>
+          <div class="adv-filter-group">
+            <span class="adv-filter-label">Género</span>
+            <div class="adv-chips" id="filter-genero">
+              <span class="adv-chip" data-val="Hombre">Hombre</span>
+              <span class="adv-chip" data-val="Mujer">Mujer</span>
+              <span class="adv-chip" data-val="Otro">Otro</span>
+            </div>
+          </div>
+          <div class="adv-filter-group">
+            <span class="adv-filter-label">Intereses</span>
+            <div class="adv-chips" id="filter-intereses">
+              <span class="adv-chip" data-val="Fitness">Fitness</span>
+              <span class="adv-chip" data-val="Hyrox">Hyrox</span>
+              <span class="adv-chip" data-val="Running">Running</span>
+              <span class="adv-chip" data-val="Padel">Padel</span>
+              <span class="adv-chip" data-val="Golf">Golf</span>
+              <span class="adv-chip" data-val="Foodie">Foodie</span>
+              <span class="adv-chip" data-val="Viajero">Viajero</span>
+              <span class="adv-chip" data-val="Fiestera">Fiestera</span>
+              <span class="adv-chip" data-val="Gamer">Gamer</span>
+              <span class="adv-chip" data-val="Anime">Anime</span>
+              <span class="adv-chip" data-val="Moda">Moda</span>
+              <span class="adv-chip" data-val="NFL">NFL</span>
+              <span class="adv-chip" data-val="Familia">Familia</span>
+              <span class="adv-chip" data-val="Lujo">Lujo</span>
+              <span class="adv-chip" data-val="Café">Café</span>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:flex-end;margin-top:4px;">
+            <button class="clear-filters-btn" onclick="clearEmbajadorFilters()">✕ Limpiar filtros</button>
+          </div>
         </div>
         <div class="filter-bar" id="embajador-filters">
           <button class="filter-chip active" onclick="filterByStatus('all','embajador')">Todos</button>
@@ -854,6 +906,7 @@ async function loadAll() {
     renderEmpresas(allEmpresas);
     renderEmbajadores(allEmbajadores);
     renderDashboard();
+    initAdvFilters();
   } catch(e) {
     console.error('Error loading:', e);
   }
@@ -886,20 +939,20 @@ function renderDashboard() {
   const last5em = [...allEmbajadores].reverse().slice(0,5);
 
   eList.innerHTML = last5e.length ? last5e.map(r => `
-    <div onclick="openEmpresaModal('${r.id}')" style="display:flex;align-items:center;gap:12px;padding:12px;background:var(--dark);border-radius:10px;margin-bottom:8px;cursor:pointer;transition:background 0.15s;border:1px solid rgba(255,255,255,0.04);" onmouseover="this.style.background='#1E1E1E'" onmouseout="this.style.background='var(--dark)'">
-      <div style="width:36px;height:36px;border-radius:8px;background:var(--red);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:16px;color:white;flex-shrink:0;">${(r.fields['Name']||'?')[0].toUpperCase()}</div>
+    <div onclick="openEmpresaModal('${r.id}')" style="display:flex;align-items:center;gap:12px;padding:12px;background:#FFFFFF;border-radius:10px;margin-bottom:8px;cursor:pointer;transition:background 0.15s;border:1px solid #E0DDD6;" onmouseover="this.style.background='#FAF8F5'" onmouseout="this.style.background='#FFFFFF'">
+      <div style="width:6px;height:6px;border-radius:50%;background:var(--red);flex-shrink:0;margin-top:4px;"></div>
       <div style="flex:1;min-width:0;">
-        <p style="font-size:13px;font-weight:500;color:white;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${r.fields['Name']||'Sin nombre'}</p>
-        <p style="font-size:11px;color:var(--mid);font-weight:300;">${r.fields['Giro']||'—'}</p>
+        <p style="font-size:13px;font-weight:500;color:#060606;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${r.fields['Name']||'Sin nombre'}</p>
+        <p style="font-size:11px;color:#AAA;font-weight:300;">${r.fields['Giro']||'—'}</p>
       </div>
       <span class="status-badge ${getStatusClass(r.fields['Estado'])}">${r.fields['Estado']||'Nuevo'}</span>
     </div>`).join('') : '<p style="color:var(--mid);font-size:13px;text-align:center;padding:24px;">Sin registros aún</p>';
 
   emList.innerHTML = last5em.length ? last5em.map(r => `
-    <div onclick="openEmbajadorModal('${r.id}')" style="display:flex;align-items:center;gap:12px;padding:12px;background:var(--dark);border-radius:10px;margin-bottom:8px;cursor:pointer;transition:background 0.15s;border:1px solid rgba(255,255,255,0.04);" onmouseover="this.style.background='#1E1E1E'" onmouseout="this.style.background='var(--dark)'">
-      <div style="width:36px;height:36px;border-radius:8px;background:var(--gray);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:16px;color:white;flex-shrink:0;">${(r.fields['Name']||'?')[0].toUpperCase()}</div>
+    <div onclick="openEmbajadorModal('${r.id}')" style="display:flex;align-items:center;gap:12px;padding:12px;background:#FFFFFF;border-radius:10px;margin-bottom:8px;cursor:pointer;transition:background 0.15s;border:1px solid #E0DDD6;" onmouseover="this.style.background='#FAF8F5'" onmouseout="this.style.background='#FFFFFF'">
+      <div style="width:6px;height:6px;border-radius:50%;background:var(--gray);flex-shrink:0;margin-top:4px;"></div>
       <div style="flex:1;min-width:0;">
-        <p style="font-size:13px;font-weight:500;color:white;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${r.fields['Name']||'Sin nombre'}</p>
+        <p style="font-size:13px;font-weight:500;color:#060606;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${r.fields['Name']||'Sin nombre'}</p>
         <p style="font-size:11px;color:var(--red);font-family:'Space Mono',monospace;">${r.fields['Instagram']||'—'}</p>
       </div>
       <p style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:white;">${r.fields['Seguidores']||'—'}</p>
@@ -1191,15 +1244,27 @@ async function deleteRecord(type, id) {
   renderDashboard();
 }
 
+function initAdvFilters() {
+  document.querySelectorAll('.adv-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      chip.classList.toggle('selected');
+      applyEmbajadorFilters();
+    });
+  });
+}
+
+function getAdvSelected(groupId) {
+  const group = document.getElementById(groupId);
+  if (!group) return [];
+  return [...group.querySelectorAll('.adv-chip.selected')].map(c => c.dataset.val);
+}
+
 function applyEmbajadorFilters() {
   renderEmbajadores(getFilteredEmbajadores());
 }
 
 function clearEmbajadorFilters() {
-  document.getElementById('filter-zona').value = '';
-  document.getElementById('filter-nse').value = '';
-  document.getElementById('filter-seguidores').value = '';
-  document.getElementById('filter-genero').value = '';
+  document.querySelectorAll('.adv-chip').forEach(c => c.classList.remove('selected'));
   applyEmbajadorFilters();
 }
 
@@ -1241,20 +1306,23 @@ function getFilteredEmpresas() {
 
 function getFilteredEmbajadores() {
   const search = document.getElementById('searchInput').value.toLowerCase();
-  const zona = document.getElementById('filter-zona') ? document.getElementById('filter-zona').value : '';
-  const nse = document.getElementById('filter-nse') ? document.getElementById('filter-nse').value : '';
-  const seguidores = document.getElementById('filter-seguidores') ? document.getElementById('filter-seguidores').value : '';
-  const genero = document.getElementById('filter-genero') ? document.getElementById('filter-genero').value : '';
-  
+  const zonas = getAdvSelected('filter-zona');
+  const nses = getAdvSelected('filter-nse');
+  const segs = getAdvSelected('filter-seguidores');
+  const generos = getAdvSelected('filter-genero');
+  const intereses = getAdvSelected('filter-intereses');
+
   return allEmbajadores.filter(r => {
     const f = r.fields;
     const matchStatus = currentEmbajadorFilter === 'all' || f['Estado'] === currentEmbajadorFilter || (!f['Estado'] && currentEmbajadorFilter === 'Nuevo');
     const matchSearch = !search || Object.values(f).some(v => v && String(v).toLowerCase().includes(search));
-    const matchZona = !zona || (f['Zona MTY'] && f['Zona MTY'].includes(zona));
-    const matchNse = !nse || (f['NSE'] && f['NSE'].includes(nse.split(' ')[0]));
-    const matchSeg = !seguidores || f['Seguidores'] === seguidores;
-    const matchGen = !genero || (f['Género'] && f['Género'].includes(genero));
-    return matchStatus && matchSearch && matchZona && matchNse && matchSeg && matchGen;
+    const matchZona = !zonas.length || zonas.some(z => f['Zona MTY'] && f['Zona MTY'].includes(z));
+    const matchNse = !nses.length || nses.some(n => f['NSE'] && f['NSE'].includes(n));
+    const matchSeg = !segs.length || segs.includes(f['Seguidores']);
+    const matchGen = !generos.length || generos.some(g => f['Género'] && f['Género'].includes(g));
+    const allInts = [f['Intereses deporte'],f['Intereses vida'],f['Intereses cultura'],f['Intereses extra']].filter(Boolean).join(' ');
+    const matchInt = !intereses.length || intereses.some(i => allInts.toLowerCase().includes(i.toLowerCase()));
+    return matchStatus && matchSearch && matchZona && matchNse && matchSeg && matchGen && matchInt;
   });
 }
 
