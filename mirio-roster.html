@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MIRIO — Únete al Roster</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@200;300;400;600&family=Space+Mono&display=swap" rel="stylesheet">
+<style>
+:root {
+  --red: #CC0000;
+  --red-dark: #990000;
+  --black: #060606;
+  --off: #F0EEE9;
+  --off2: #E8E5DE;
+  --white: #FFFFFF;
+  --gray: #888;
+  --light-gray: #D5D2CB;
+  --text: #1A1A1A;
+  --text-muted: #666;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+body { background:var(--off); color:var(--text); font-family:'Outfit',sans-serif; min-height:100vh; overflow-x:hidden; }
+
+/* HEADER */
+.header {
+  background:var(--black);
+  padding:18px 24px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  position:sticky; top:0; z-index:100;
+}
+.logo { display:flex; align-items:center; gap:14px; }
+.logo-name { font-family:'Bebas Neue',sans-serif; font-size:26px; letter-spacing:4px; color:var(--white); line-height:1; }
+.header-tag { font-family:'Space Mono',monospace; font-size:9px; letter-spacing:3px; color:var(--gray); text-transform:uppercase; }
+
+/* PROGRESS */
+.progress-wrap { background:var(--black); padding:0 24px 18px; }
+.progress-bar-bg { height:2px; background:rgba(255,255,255,0.1); border-radius:2px; overflow:hidden; margin-bottom:10px; }
+.progress-bar-fill { height:100%; background:var(--red); border-radius:2px; transition:width 0.5s cubic-bezier(0.4,0,0.2,1); }
+.progress-steps { display:flex; gap:4px; }
+.ps { flex:1; height:3px; border-radius:2px; background:rgba(255,255,255,0.1); transition:background 0.4s; }
+.ps.done { background:var(--red); }
+.ps.active { background:var(--red); opacity:0.5; }
+.progress-label { font-family:'Space Mono',monospace; font-size:9px; letter-spacing:2px; color:var(--gray); text-transform:uppercase; margin-top:8px; }
+
+/* MAIN */
+.main { padding:32px 24px 120px; max-width:600px; margin:0 auto; }
+
+.step-panel { display:none; animation:slideIn 0.4s cubic-bezier(0.4,0,0.2,1); }
+.step-panel.active { display:block; }
+
+@keyframes slideIn {
+  from { opacity:0; transform:translateY(16px); }
+  to { opacity:1; transform:translateY(0); }
+}
+
+/* STEP HEADER */
+.step-eyebrow { font-family:'Space Mono',monospace; font-size:9px; letter-spacing:3px; color:var(--red); text-transform:uppercase; margin-bottom:8px; }
+.step-title { font-family:'Bebas Neue',sans-serif; font-size:40px; line-height:0.95; letter-spacing:1px; color:var(--black); margin-bottom:8px; }
+.step-sub { font-size:14px; color:var(--text-muted); font-weight:300; margin-bottom:32px; line-height:1.6; }
+
+/* FORM ELEMENTS */
+.q-block { margin-bottom:28px; }
+.q-label { font-size:15px; font-weight:600; color:var(--black); margin-bottom:10px; display:block; }
+.q-hint { font-size:12px; color:var(--text-muted); margin-bottom:10px; font-weight:300; }
+
+.q-input {
+  width:100%; background:var(--white); border:1.5px solid var(--light-gray);
+  border-radius:10px; padding:14px 16px; font-family:'Outfit',sans-serif;
+  font-size:15px; color:var(--text); outline:none; transition:border-color 0.2s;
+  -webkit-appearance:none;
+}
+.q-input:focus { border-color:var(--red); }
+.q-input::placeholder { color:#BBB; }
+
+.input-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+
+/* IG INPUT with @ prefix */
+.ig-wrap { position:relative; }
+.ig-prefix {
+  position:absolute; left:16px; top:50%; transform:translateY(-50%);
+  font-size:16px; color:var(--red); font-weight:700; pointer-events:none;
+  font-family:'Space Mono',monospace; line-height:1;
+}
+.ig-wrap .q-input { padding-left:32px; }
+
+/* Chips */
+.chips { display:flex; flex-wrap:wrap; gap:8px; }
+.chip {
+  padding:9px 16px; border:1.5px solid var(--light-gray); border-radius:100px;
+  font-size:13px; font-weight:400; color:var(--text-muted); background:var(--white);
+  cursor:pointer; transition:all 0.18s; user-select:none; -webkit-user-select:none;
+}
+.chip:hover { border-color:var(--red); color:var(--red); }
+.chip.selected { background:var(--red); border-color:var(--red); color:var(--white); font-weight:500; }
+.chip.radio.selected { background:var(--black); border-color:var(--black); color:var(--white); }
+.chip.radio:hover { border-color:var(--black); color:var(--black); }
+
+/* Toggle */
+.toggle-pair { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.toggle-btn {
+  padding:14px; border:1.5px solid var(--light-gray); border-radius:12px;
+  background:var(--white); font-family:'Outfit',sans-serif; font-size:14px;
+  font-weight:500; color:var(--text-muted); cursor:pointer; text-align:center; transition:all 0.18s;
+}
+.toggle-btn:hover { border-color:var(--red); color:var(--red); }
+.toggle-btn.selected { background:var(--black); border-color:var(--black); color:var(--white); }
+
+/* Category section headers */
+.cat-label {
+  font-family:'Space Mono',monospace; font-size:9px; letter-spacing:3px;
+  text-transform:uppercase; color:var(--red); margin-bottom:10px; margin-top:20px; display:block;
+}
+.cat-label:first-child { margin-top:0; }
+
+/* Follower range visual */
+.follower-cards { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.fc {
+  border:1.5px solid var(--light-gray); border-radius:12px; background:var(--white);
+  padding:16px; cursor:pointer; transition:all 0.2s; text-align:center;
+}
+.fc:hover { border-color:var(--red); }
+.fc.selected { border-color:var(--red); background:#FFF5F5; }
+.fc-range { font-family:'Bebas Neue',sans-serif; font-size:22px; letter-spacing:1px; color:var(--black); margin-bottom:2px; }
+.fc.selected .fc-range { color:var(--red); }
+.fc-label { font-size:11px; color:var(--text-muted); font-weight:300; }
+
+/* Slider */
+.slider-wrap { background:var(--white); border-radius:12px; padding:18px 20px; border:1.5px solid var(--light-gray); }
+.slider-value { font-family:'Bebas Neue',sans-serif; font-size:28px; color:var(--red); letter-spacing:1px; margin-bottom:10px; }
+input[type=range] { width:100%; -webkit-appearance:none; height:4px; border-radius:2px; background:var(--light-gray); outline:none; margin:8px 0; }
+input[type=range]::-webkit-slider-thumb { -webkit-appearance:none; width:22px; height:22px; border-radius:50%; background:var(--red); cursor:pointer; border:3px solid var(--white); box-shadow:0 0 0 1.5px var(--red); }
+.slider-labels { display:flex; justify-content:space-between; font-size:11px; color:var(--text-muted); margin-top:4px; }
+
+/* Sub card */
+.sub-card { background:var(--white); border:1.5px solid #FFCCCC; border-left:3px solid var(--red); border-radius:12px; padding:16px 18px; animation:slideIn 0.3s ease; margin-top:12px; }
+.sub-card-label { font-family:'Space Mono',monospace; font-size:9px; letter-spacing:2px; text-transform:uppercase; color:var(--red); margin-bottom:10px; }
+
+/* Photo upload */
+.photo-upload {
+  border:2px dashed var(--light-gray); border-radius:16px; padding:40px 24px;
+  text-align:center; cursor:pointer; transition:all 0.2s; background:var(--white);
+  position:relative;
+}
+.photo-upload:hover { border-color:var(--red); }
+.photo-upload input { position:absolute; inset:0; opacity:0; cursor:pointer; width:100%; height:100%; }
+.photo-upload-icon { font-size:32px; margin-bottom:12px; color:var(--light-gray); }
+.photo-upload-text { font-size:14px; color:var(--text-muted); font-weight:300; }
+.photo-upload-text strong { color:var(--red); font-weight:500; }
+.photo-preview { width:100%; max-height:200px; object-fit:cover; border-radius:12px; display:none; }
+
+/* FOOTER NAV */
+.footer-nav {
+  position:fixed; bottom:0; left:0; right:0; background:var(--white);
+  border-top:1px solid var(--off2); padding:16px 24px; display:flex; gap:12px;
+  max-width:600px; margin:0 auto;
+}
+.btn-back {
+  padding:14px 20px; border:1.5px solid var(--light-gray); border-radius:12px;
+  background:transparent; font-family:'Outfit',sans-serif; font-size:15px;
+  font-weight:500; color:var(--text-muted); cursor:pointer; flex-shrink:0; transition:all 0.18s;
+}
+.btn-back:hover { border-color:var(--black); color:var(--black); }
+.btn-next {
+  flex:1; padding:14px; background:var(--red); border:none; border-radius:12px;
+  font-family:'Bebas Neue',sans-serif; font-size:20px; letter-spacing:2px; color:var(--white);
+  cursor:pointer; transition:background 0.18s, transform 0.1s;
+}
+.btn-next:hover { background:var(--red-dark); }
+.btn-next:active { transform:scale(0.98); }
+
+/* THANK YOU */
+.thankyou { display:none; min-height:80vh; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:40px 24px; animation:slideIn 0.5s ease; }
+.thankyou.active { display:flex; }
+.ty-title { font-family:'Bebas Neue',sans-serif; font-size:52px; letter-spacing:2px; color:var(--black); line-height:0.9; margin-bottom:16px; margin-top:32px; }
+.ty-sub { font-size:15px; color:var(--text-muted); font-weight:300; line-height:1.7; max-width:300px; margin-bottom:40px; }
+.ty-card { background:var(--black); border-radius:12px; padding:24px 28px; text-align:left; width:100%; max-width:340px; margin-bottom:24px; }
+.ty-card-label { font-family:'Space Mono',monospace; font-size:9px; letter-spacing:3px; color:var(--red); text-transform:uppercase; margin-bottom:12px; }
+.ty-item { display:flex; align-items:flex-start; gap:10px; margin-bottom:10px; }
+.ty-dot { width:5px; height:5px; border-radius:50%; background:var(--red); flex-shrink:0; margin-top:6px; }
+.ty-item-text { font-size:13px; color:rgba(255,255,255,0.7); font-weight:300; line-height:1.5; }
+.ty-mono { font-family:'Space Mono',monospace; font-size:9px; letter-spacing:3px; color:var(--light-gray); text-transform:uppercase; }
+
+/* Sending */
+.sending-overlay { display:none; position:fixed; inset:0; background:rgba(6,6,6,0.85); z-index:200; align-items:center; justify-content:center; flex-direction:column; gap:16px; }
+.sending-overlay.active { display:flex; }
+.sending-spinner { width:40px; height:40px; border:2px solid rgba(255,255,255,0.1); border-top-color:var(--red); border-radius:50%; animation:spin 0.8s linear infinite; }
+@keyframes spin { to { transform:rotate(360deg); } }
+.sending-text { font-family:'Space Mono',monospace; font-size:10px; letter-spacing:3px; color:rgba(255,255,255,0.5); text-transform:uppercase; }
+
+@media(max-width:480px) {
+  .follower-cards { grid-template-columns:1fr 1fr; }
+  .input-row { grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <a href="index.html" class="logo" style="text-decoration:none;">
+    <svg width="52" height="28" viewBox="0 0 110 60" fill="none">
+      <line x1="5" y1="18" x2="105" y2="18" stroke="#CC0000" stroke-width="4" stroke-linecap="round"/>
+      <line x1="5" y1="42" x2="105" y2="42" stroke="#CC0000" stroke-width="1.5" stroke-linecap="round" opacity="0.4"/>
+      <circle cx="55" cy="30" r="3.5" fill="#CC0000"/>
+    </svg>
+    <span class="logo-name">MIRIO</span>
+  </a>
+  <span class="header-tag">Únete al Roster</span>
+</div>
+
+<!-- PROGRESS -->
+<div class="progress-wrap">
+  <div class="progress-bar-bg"><div class="progress-bar-fill" id="progressBar" style="width:0%"></div></div>
+  <div class="progress-steps" id="progressSteps"></div>
+  <p class="progress-label" id="progressLabel">Paso 1 de 5</p>
+</div>
+
+<!-- MAIN -->
+<div class="main" id="mainContent">
+
+  <!-- STEP 1: DATOS BÁSICOS -->
+  <div class="step-panel active" data-step="1">
+    <p class="step-eyebrow">01 — Tú</p>
+    <h2 class="step-title">CUÉNTANOS<br>QUIÉN ERES</h2>
+    <p class="step-sub">Lo básico primero. Menos de 2 minutos.</p>
+
+    <div class="q-block">
+      <label class="q-label">¿Cómo te llamas?</label>
+      <div class="input-row">
+        <input type="text" class="q-input" id="r_nombre" placeholder="Nombre" autocomplete="off">
+        <input type="text" class="q-input" id="r_apellido" placeholder="Apellido" autocomplete="off">
+      </div>
+    </div>
+
+    <div class="q-block">
+      <label class="q-label">Tu Instagram</label>
+      <div class="ig-wrap">
+        <span class="ig-prefix">@</span>
+        <input type="text" class="q-input" id="r_ig" placeholder="tuusuario" autocomplete="off">
+      </div>
+    </div>
+
+    <div class="q-block">
+      <label class="q-label">WhatsApp</label>
+      <input type="tel" class="q-input" id="r_wa" placeholder="+52 81..." autocomplete="off">
+    </div>
+
+    <div class="q-block">
+      <label class="q-label">Correo electrónico</label>
+      <input type="email" class="q-input" id="r_email" placeholder="tu@correo.com" autocomplete="off">
+    </div>
+
+
+  </div>
+
+  <!-- STEP 2: TU PRESENCIA -->
+  <div class="step-panel" data-step="2">
+    <p class="step-eyebrow">02 — Tu presencia</p>
+    <h2 class="step-title">TU CUENTA<br>EN NÚMEROS</h2>
+    <p class="step-sub">Solo Instagram — es donde todo pasa.</p>
+
+    <div class="q-block">
+      <label class="q-label">¿Cuántos seguidores tienes?</label>
+      <div class="follower-cards" id="r_followers">
+        <div class="fc" data-val="500 – 1.5K">
+          <p class="fc-range">500 – 1.5K</p>
+          <p class="fc-label">Micro inicial</p>
+        </div>
+        <div class="fc" data-val="1.5K – 3K">
+          <p class="fc-range">1.5K – 3K</p>
+          <p class="fc-label">Micro creciendo</p>
+        </div>
+        <div class="fc" data-val="3K – 5K">
+          <p class="fc-range">3K – 5K</p>
+          <p class="fc-label">Micro sólido</p>
+        </div>
+        <div class="fc" data-val="5K – 10K">
+          <p class="fc-range">5K – 10K</p>
+          <p class="fc-label">Micro establecido</p>
+        </div>
+        <div class="fc" data-val="10K – 20K">
+          <p class="fc-range">10K – 20K</p>
+          <p class="fc-label">Micro top</p>
+        </div>
+      </div>
+      <div style="margin-top:12px; padding-top:12px; border-top:1px dashed var(--light-gray);">
+        <span class="chip" id="chip_macro" style="border-style:dashed;">✦ Tengo más de 20K</span>
+      </div>
+      <div id="sub_macro" style="display:none; margin-top:12px;">
+        <div class="sub-card">
+          <p class="sub-card-label">Selecciona tu rango</p>
+          <div class="follower-cards" id="r_followers_macro" style="margin-top:8px;">
+            <div class="fc" data-val="20K – 50K">
+              <p class="fc-range">20K – 50K</p>
+              <p class="fc-label">Mid-tier</p>
+            </div>
+            <div class="fc" data-val="50K – 100K">
+              <p class="fc-range">50K – 100K</p>
+              <p class="fc-label">Mid-tier alto</p>
+            </div>
+            <div class="fc" data-val="100K – 500K">
+              <p class="fc-range">100K – 500K</p>
+              <p class="fc-label">Macro</p>
+            </div>
+            <div class="fc" data-val="500K+">
+              <p class="fc-range">500K+</p>
+              <p class="fc-label">Top creator</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="q-block">
+      <label class="q-label">¿Qué tipo de contenido subes principalmente?</label>
+      <div class="chips" id="r_contenido">
+        <span class="chip" data-val="Lifestyle / Día a día">Lifestyle / Día a día</span>
+        <span class="chip" data-val="Reseñas / Reviews">Reseñas / Reviews</span>
+        <span class="chip" data-val="Fitness / Entrenamiento">Fitness / Entrenamiento</span>
+        <span class="chip" data-val="Gastronomía / Food">Gastronomía / Food</span>
+        <span class="chip" data-val="Moda / Outfits">Moda / Outfits</span>
+        <span class="chip" data-val="Viajes">Viajes</span>
+        <span class="chip" data-val="Humor / Entretenimiento">Humor / Entretenimiento</span>
+        <span class="chip" data-val="Negocios / Emprendimiento">Negocios</span>
+        <span class="chip" data-val="Arte / Diseño">Arte / Diseño</span>
+        <span class="chip" data-val="Familia / Maternidad">Familia / Maternidad</span>
+        <span class="chip" data-val="Gaming">Gaming</span>
+        <span class="chip" data-val="Anime / Pop culture">Anime / Pop culture</span>
+        <span class="chip" data-val="Música">Música</span>
+      </div>
+    </div>
+
+    <div class="q-block">
+      <label class="q-label">¿Con qué frecuencia publicas?</label>
+      <div class="chips" id="r_frecuencia">
+        <span class="chip radio" data-val="Todos los días">Todos los días</span>
+        <span class="chip radio" data-val="3–5 veces por semana">3–5 veces / semana</span>
+        <span class="chip radio" data-val="1–2 veces por semana">1–2 veces / semana</span>
+        <span class="chip radio" data-val="Ocasionalmente">Ocasionalmente</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 3: QUIÉN ERES -->
+  <div class="step-panel" data-step="3">
+    <p class="step-eyebrow">03 — Tu perfil</p>
+    <h2 class="step-title">¿CÓMO<br>ERES TÚ?</h2>
+    <p class="step-sub">Entre más completo, más campañas que encajen contigo.</p>
+
+    <div class="q-block">
+      <div class="input-row">
+        <div>
+          <label class="q-label">Edad</label>
+          <input type="number" class="q-input" id="r_edad" placeholder="Ej. 24" min="18" max="65">
+        </div>
+        <div>
+          <label class="q-label">Género</label>
+          <div class="chips" id="r_genero" style="margin-top:4px;">
+            <span class="chip radio" data-val="Hombre">Hombre</span>
+            <span class="chip radio" data-val="Mujer">Mujer</span>
+            <span class="chip radio" data-val="Otro">Otro</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="q-block">
+      <label class="q-label">¿En qué zona de MTY vives o te mueves?</label>
+      <div class="chips" id="r_zona">
+        <span class="chip" data-val="San Pedro / Valle">San Pedro / Valle</span>
+        <span class="chip" data-val="Monterrey Centro">MTY Centro</span>
+        <span class="chip" data-val="Cumbres">Cumbres</span>
+        <span class="chip" data-val="Contry">Contry</span>
+        <span class="chip" data-val="Del Valle / Obispado">Del Valle / Obispado</span>
+        <span class="chip" data-val="Mitras / Roma">Mitras / Roma</span>
+        <span class="chip" data-val="Santa Catarina">Santa Catarina</span>
+        <span class="chip" data-val="Apodaca / Escobedo">Apodaca / Escobedo</span>
+        <span class="chip" data-val="Guadalupe / Juárez">Guadalupe / Juárez</span>
+        <span class="chip" data-val="Toda la ZMM">Toda la ZMM</span>
+      </div>
+    </div>
+
+    <div class="q-block">
+      <label class="q-label">Nivel socioeconómico (NSE)</label>
+      <div class="chips" id="r_nse">
+        <span class="chip radio" data-val="A/B (alto)">A/B · Alto</span>
+        <span class="chip radio" data-val="C+ (medio alto)">C+ · Medio alto</span>
+        <span class="chip radio" data-val="C (clase media)">C · Clase media</span>
+        <span class="chip radio" data-val="D+ (masa emergente)">D+ · Emergente</span>
+      </div>
+    </div>
+
+    <div class="q-block">
+      <label class="q-label">Estado civil / situación</label>
+      <div class="chips" id="r_estado">
+        <span class="chip radio" data-val="Soltero/a">Soltero/a</span>
+        <span class="chip radio" data-val="En relación">En relación</span>
+        <span class="chip radio" data-val="Casado/a">Casado/a</span>
+      </div>
+    </div>
+
+    <div class="q-block">
+      <label class="q-label">¿Tienes hijos?</label>
+      <div class="toggle-pair" id="r_hijos_toggle">
+        <button class="toggle-btn" data-val="Sí">✓ Sí</button>
+        <button class="toggle-btn" data-val="No">✗ No</button>
+      </div>
+      <div id="sub_hijos" style="display:none; margin-top:12px;">
+        <div class="sub-card">
+          <p class="sub-card-label">Cuéntanos un poco más</p>
+          <label class="q-label" style="font-size:13px; margin-top:8px; margin-bottom:8px;">¿Cuántos?</label>
+          <div class="chips" id="r_hijos_cantidad">
+            <span class="chip radio" data-val="1 hijo">1</span>
+            <span class="chip radio" data-val="2 hijos">2</span>
+            <span class="chip radio" data-val="3+ hijos">3+</span>
+          </div>
+          <label class="q-label" style="font-size:13px; margin-top:16px; margin-bottom:8px;">¿Qué edades? (puedes seleccionar varios)</label>
+          <div class="chips" id="r_hijos_edad">
+            <span class="chip" data-val="Bebé (0–2 años)">Bebé · 0–2</span>
+            <span class="chip" data-val="Preescolar (3–5 años)">Preescolar · 3–5</span>
+            <span class="chip" data-val="Primaria (6–12 años)">Primaria · 6–12</span>
+            <span class="chip" data-val="Adolescente (13+ años)">Adolescente · 13+</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="q-block">
+      <label class="q-label">¿A qué te dedicas?</label>
+      <div class="chips" id="r_ocupacion">
+        <span class="chip radio" data-val="Estudiante">Estudiante</span>
+        <span class="chip radio" data-val="Empleado/a">Empleado/a</span>
+        <span class="chip radio" data-val="Emprendedor/a">Emprendedor/a</span>
+        <span class="chip radio" data-val="Freelance / Creativo">Freelance / Creativo</span>
+        <span class="chip radio" data-val="Ama de casa">Ama de casa</span>
+        <span class="chip radio" data-val="Profesionista">Profesionista</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 4: TUS INTERESES -->
+  <div class="step-panel" data-step="4">
+    <p class="step-eyebrow">04 — Tu mundo</p>
+    <h2 class="step-title">¿QUÉ TE<br>MUEVE?</h2>
+    <p class="step-sub">Selecciona todo lo que te describe. Aquí no hay respuesta incorrecta — entre más honesto, mejor.</p>
+
+    <div class="q-block">
+      <span class="cat-label">Deporte & Movimiento</span>
+      <div class="chips" id="r_inter_deporte">
+        <span class="chip" data-val="Fitness / Gym">Fitness / Gym</span>
+        <span class="chip" data-val="Hyrox">Hyrox</span>
+        <span class="chip" data-val="Running">Running</span>
+        <span class="chip" data-val="Padel">Padel</span>
+        <span class="chip" data-val="Golf">Golf</span>
+        <span class="chip" data-val="Hike / Outdoor">Hike / Outdoor</span>
+        <span class="chip" data-val="Ciclismo">Ciclismo</span>
+        <span class="chip" data-val="Crossfit">Crossfit</span>
+        <span class="chip" data-val="Natación">Natación</span>
+        <span class="chip" data-val="Artes marciales">Artes marciales</span>
+        <span class="chip" data-val="Yoga / Pilates">Yoga / Pilates</span>
+        <span class="chip" data-val="Fútbol">Fútbol</span>
+        <span class="chip" data-val="Tenis">Tenis</span>
+        <span class="chip" data-val="Basquetbol">Basquetbol</span>
+        <span class="chip" data-val="Box">Box</span>
+      </div>
+
+      <span class="cat-label">Estilo de vida</span>
+      <div class="chips" id="r_inter_vida">
+        <span class="chip" data-val="Foodie / Gastronomía">Foodie / Gastronomía</span>
+        <span class="chip" data-val="Viajero/a">Viajero/a</span>
+        <span class="chip" data-val="Fiestera / Social">Fiestera / Social</span>
+        <span class="chip" data-val="Homebody / Casero">Homebody / Casero</span>
+        <span class="chip" data-val="Mascotero/a">Mascotero/a</span>
+        <span class="chip" data-val="Sustentable / Eco">Sustentable / Eco</span>
+        <span class="chip" data-val="Lujo / Premium">Lujo / Premium</span>
+        <span class="chip" data-val="Familiar">Familiar</span>
+        <span class="chip" data-val="Noctámbulo/a">Noctámbulo/a</span>
+        <span class="chip" data-val="Café lover">Café lover</span>
+        <span class="chip" data-val="Drinks / Cantinero">Drinks / Cantinero</span>
+        <span class="chip" data-val="Shopper / Compras">Shopper / Compras</span>
+        <span class="chip" data-val="Bodas / Eventos sociales">Bodas / Eventos</span>
+      </div>
+
+      <span class="cat-label">Cultura & Entretenimiento</span>
+      <div class="chips" id="r_inter_cultura">
+        <span class="chip" data-val="Gamer">Gamer</span>
+        <span class="chip" data-val="Anime">Anime</span>
+        <span class="chip" data-val="Música / Conciertos">Música / Conciertos</span>
+        <span class="chip" data-val="Arte / Diseño">Arte / Diseño</span>
+        <span class="chip" data-val="Cine / Series">Cine / Series</span>
+        <span class="chip" data-val="Lectura">Lectura</span>
+        <span class="chip" data-val="Moda / Streetwear">Moda / Streetwear</span>
+        <span class="chip" data-val="NFL / Fútbol americano">NFL / Fútbol americano</span>
+        <span class="chip" data-val="Tecnología / Gadgets">Tecnología / Gadgets</span>
+        <span class="chip" data-val="Emprendimiento">Emprendimiento</span>
+        <span class="chip" data-val="Bienestar / Mindfulness">Bienestar / Mindfulness</span>
+        <span class="chip" data-val="Belleza / Skincare">Belleza / Skincare</span>
+        <span class="chip" data-val="Podcasts">Podcasts</span>
+        <span class="chip" data-val="Automóviles / Car lover">Automóviles / Car lover</span>
+        <span class="chip" data-val="Tatuajes">Tatuajes</span>
+        <span class="chip" data-val="Fotografía">Fotografía</span>
+      </div>
+
+      <span class="cat-label" style="margin-top:24px;">¿Algo más que te describa?</span>
+      <p class="q-hint">Opcional — si hay algo tuyo que no está en la lista, ponlo aquí.</p>
+      <input type="text" class="q-input" id="r_intereses_extra" placeholder="Ej. Coleccionista de sneakers, amante del mezcal, piloto de drones...">
+    </div>
+  </div>
+
+  <!-- STEP 5: DISPONIBILIDAD -->
+  <div class="step-panel" data-step="5">
+    <p class="step-eyebrow">05 — Disponibilidad</p>
+    <h2 class="step-title">¿CÓMO<br>TRABAJAMOS?</h2>
+    <p class="step-sub">Últimas preguntas para saber cómo es mejor colaborar contigo.</p>
+
+    <div class="q-block">
+      <label class="q-label">¿Has trabajado con marcas antes?</label>
+      <div class="toggle-pair" id="r_experiencia">
+        <button class="toggle-btn" data-val="Sí, varias veces">✓ Sí, varias veces</button>
+        <button class="toggle-btn" data-val="Primera vez">✦ Primera vez</button>
+      </div>
+    </div>
+
+    <div class="q-block">
+      <label class="q-label">¿Cuántas campañas al mes puedes hacer?</label>
+      <div class="chips" id="r_campanas">
+        <span class="chip radio" data-val="1 campaña / mes">1 campaña</span>
+        <span class="chip radio" data-val="2–3 campañas / mes">2–3 campañas</span>
+        <span class="chip radio" data-val="4+ campañas / mes">4 o más</span>
+      </div>
+    </div>
+
+    <div class="q-block">
+      <label class="q-label">¿Qué tipo de marcas te gustaría representar?</label>
+      <p class="q-hint">Selecciona los giros con los que te identificas o te gustaría trabajar.</p>
+      <div class="chips" id="r_marcas">
+        <span class="chip" data-val="Restaurantes / Cafeterías">Restaurantes / Cafeterías</span>
+        <span class="chip" data-val="Moda / Ropa">Moda / Ropa</span>
+        <span class="chip" data-val="Belleza / Spa">Belleza / Spa</span>
+        <span class="chip" data-val="Fitness / Gym">Fitness / Gym</span>
+        <span class="chip" data-val="Bebidas / Licores">Bebidas / Licores</span>
+        <span class="chip" data-val="Tecnología">Tecnología</span>
+        <span class="chip" data-val="Viajes / Hoteles">Viajes / Hoteles</span>
+        <span class="chip" data-val="Salud / Bienestar">Salud / Bienestar</span>
+        <span class="chip" data-val="Automotriz">Automotriz</span>
+        <span class="chip" data-val="Lujo / Premium">Lujo / Premium</span>
+        <span class="chip" data-val="Entretenimiento / Eventos">Entretenimiento / Eventos</span>
+        <span class="chip" data-val="Cualquier giro">Cualquier giro</span>
+      </div>
+    </div>
+
+    <div class="q-block">
+      <label class="q-label">¿Algo más que quieras que sepamos de ti?</label>
+      <p class="q-hint">Opcional — pero si hay algo que te hace único y quieres que lo tengamos en cuenta, aquí es.</p>
+      <textarea class="q-input" id="r_extra" placeholder="Ej. Soy triatleta, tengo comunidad muy enganchada en stories, hablo inglés, tengo estudio para crear contenido en casa..." style="min-height:90px;"></textarea>
+    </div>
+  </div>
+
+</div>
+
+<!-- THANK YOU -->
+<div class="thankyou" id="thankyou">
+  <svg width="80" height="52" viewBox="0 0 110 70" fill="none">
+    <line x1="5" y1="22" x2="105" y2="22" stroke="#CC0000" stroke-width="4" stroke-linecap="round"/>
+    <line x1="5" y1="48" x2="105" y2="48" stroke="#CC0000" stroke-width="1.5" stroke-linecap="round" opacity="0.35"/>
+    <circle cx="55" cy="35" r="4" fill="#CC0000"/>
+  </svg>
+  <h2 class="ty-title">ESTÁS<br>DENTRO.</h2>
+  <p class="ty-sub">Tu perfil ya está en el roster de MIRIO. Te contactamos cuando haya una campaña que encaje contigo.</p>
+  <div class="ty-card">
+    <p class="ty-card-label">¿Qué sigue?</p>
+    <div class="ty-item"><div class="ty-dot"></div><p class="ty-item-text">Revisamos tu perfil en las próximas 24–48 hrs</p></div>
+    <div class="ty-item"><div class="ty-dot"></div><p class="ty-item-text">Te contactamos por WhatsApp cuando haya match</p></div>
+    <div class="ty-item"><div class="ty-dot"></div><p class="ty-item-text">Tú decides si te sumas o no a cada campaña</p></div>
+  </div>
+  <p class="ty-mono">MIRIO · MTY · @mirio.pr</p>
+</div>
+
+<!-- FOOTER NAV -->
+<div class="footer-nav" id="footerNav">
+  <button class="btn-back" id="btnBack" style="display:none;" onclick="prevStep()">← Atrás</button>
+  <button class="btn-next" id="btnNext" onclick="nextStep()">SIGUIENTE →</button>
+</div>
+
+<!-- SENDING -->
+<div class="sending-overlay" id="sendingOverlay">
+  <div class="sending-spinner"></div>
+  <p class="sending-text">Guardando tu perfil...</p>
+</div>
+
+<script>
+const TOTAL_STEPS = 5;
+const WA_NUMBER = "5281XXXXXXXX"; // ← Tu número
+
+let currentStep = 1;
+
+// Progress init
+function initProgress() {
+  const wrap = document.getElementById('progressSteps');
+  wrap.innerHTML = '';
+  for (let i = 1; i <= TOTAL_STEPS; i++) {
+    const el = document.createElement('div');
+    el.className = 'ps' + (i < currentStep ? ' done' : i === currentStep ? ' active' : '');
+    wrap.appendChild(el);
+  }
+  document.getElementById('progressBar').style.width = ((currentStep-1)/TOTAL_STEPS*100) + '%';
+  document.getElementById('progressLabel').textContent = `Paso ${currentStep} de ${TOTAL_STEPS}`;
+  document.getElementById('btnBack').style.display = currentStep > 1 ? 'block' : 'none';
+  document.getElementById('btnNext').textContent = currentStep === TOTAL_STEPS ? 'ENVIAR ✦' : 'SIGUIENTE →';
+}
+
+// Follower cards
+document.querySelectorAll('.fc').forEach(card => {
+  card.addEventListener('click', () => {
+    card.closest('.follower-cards').querySelectorAll('.fc').forEach(c => c.classList.remove('selected'));
+    card.classList.add('selected');
+  });
+});
+
+// Chips (multi-select)
+document.querySelectorAll('.chips').forEach(group => {
+  const isRadio = group.querySelector('.chip.radio') !== null;
+  group.querySelectorAll('.chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      if (isRadio) {
+        group.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
+      }
+      chip.classList.toggle('selected');
+      if (isRadio) chip.classList.add('selected');
+    });
+  });
+});
+
+// Toggle buttons
+document.querySelectorAll('.toggle-pair').forEach(pair => {
+  pair.querySelectorAll('.toggle-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      pair.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+    });
+  });
+});
+
+function getSelected(groupId) {
+  const group = document.getElementById(groupId);
+  if (!group) return '';
+  const chips = [...group.querySelectorAll('.chip.selected, .toggle-btn.selected, .fc.selected')];
+  return chips.map(c => c.dataset.val || c.querySelector('.fc-range')?.textContent || c.textContent.replace(/[✓✗✦]/g,'').trim()).join(', ');
+}
+
+function getAllIntereses() {
+  const grupos = ['r_inter_deporte', 'r_inter_vida', 'r_inter_cultura'];
+  return grupos.flatMap(id => {
+    const g = document.getElementById(id);
+    if (!g) return [];
+    return [...g.querySelectorAll('.chip.selected')].map(c => c.dataset.val);
+  }).join(', ');
+}
+
+function collectData() {
+  return {
+    nombre: (document.getElementById('r_nombre').value + ' ' + document.getElementById('r_apellido').value).trim(),
+    ig: '@' + document.getElementById('r_ig').value,
+    wa: document.getElementById('r_wa').value,
+    email: document.getElementById('r_email').value,
+    followers: (() => {
+      const macro = document.getElementById('chip_macro');
+      if (macro && macro.classList.contains('selected')) {
+        const macroCard = document.querySelector('#r_followers_macro .fc.selected');
+        return macroCard ? macroCard.dataset.val : '20K+';
+      }
+      return getSelected('r_followers');
+    })(),
+    contenido: getSelected('r_contenido'),
+    frecuencia: getSelected('r_frecuencia'),
+    edad: document.getElementById('r_edad').value,
+    genero: getSelected('r_genero'),
+    zona: getSelected('r_zona'),
+    nse: getSelected('r_nse'),
+    hijos: (() => {
+      const toggle = document.querySelector('#r_hijos_toggle .toggle-btn.selected');
+      if (!toggle || toggle.dataset.val === 'No') return 'No';
+      const cantidad = getSelected('r_hijos_cantidad');
+      const edades = getSelected('r_hijos_edad');
+      return 'Sí — ' + cantidad + ' — Edades: ' + edades;
+    })(),
+    estado: getSelected('r_estado'),
+    ocupacion: getSelected('r_ocupacion'),
+    intereses: getAllIntereses() + (document.getElementById('r_intereses_extra').value ? ', ' + document.getElementById('r_intereses_extra').value : ''),
+    experiencia: getSelected('r_experiencia'),
+    campanas: getSelected('r_campanas'),
+    marcas: getSelected('r_marcas'),
+    extra: document.getElementById('r_extra').value,
+  };
+}
+
+function buildWAMessage(d) {
+  return encodeURIComponent(
+`✦ NUEVO EMBAJADOR — ROSTER MIRIO ✦
+
+*PERFIL*
+Nombre: ${d.nombre}
+Instagram: ${d.ig}
+WhatsApp: ${d.wa}
+Email: ${d.email}
+
+*PRESENCIA IG*
+Seguidores: ${d.followers}
+Tipo de contenido: ${d.contenido}
+Frecuencia: ${d.frecuencia}
+
+*QUIÉN ES*
+Edad: ${d.edad}
+Género: ${d.genero}
+Zona MTY: ${d.zona}
+NSE: ${d.nse}
+Estado civil: ${d.estado}
+Ocupación: ${d.ocupacion}
+Hijos: ${d.hijos}
+
+*INTERESES / LIFESTYLE*
+${d.intereses}
+
+*DISPONIBILIDAD*
+Experiencia con marcas: ${d.experiencia}
+Campañas por mes: ${d.campanas}
+Giros preferidos: ${d.marcas}
+
+*NOTAS*
+${d.extra}
+
+— enviado desde mirio-roster`
+  );
+}
+
+
+// Macro chip toggle
+const chipMacro = document.getElementById('chip_macro');
+const subMacro = document.getElementById('sub_macro');
+if (chipMacro) {
+  chipMacro.addEventListener('click', () => {
+    chipMacro.classList.toggle('selected');
+    const isOn = chipMacro.classList.contains('selected');
+    subMacro.style.display = isOn ? 'block' : 'none';
+    if (isOn) {
+      // Deselect micro cards
+      document.querySelectorAll('#r_followers .fc').forEach(c => c.classList.remove('selected'));
+    }
+    chipMacro.style.borderStyle = isOn ? 'solid' : 'dashed';
+  });
+}
+
+// Macro follower cards — deselect micro when macro card selected
+document.querySelectorAll('#r_followers_macro .fc').forEach(card => {
+  card.addEventListener('click', () => {
+    document.querySelectorAll('#r_followers_macro .fc').forEach(c => c.classList.remove('selected'));
+    card.classList.add('selected');
+  });
+});
+
+
+// Hijos toggle
+const hijosTogglePair = document.getElementById('r_hijos_toggle');
+if (hijosTogglePair) {
+  hijosTogglePair.querySelectorAll('.toggle-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      hijosTogglePair.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      document.getElementById('sub_hijos').style.display = btn.dataset.val === 'Sí' ? 'block' : 'none';
+    });
+  });
+}
+
+function showStep(n) {
+  document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
+  const panel = document.querySelector(`[data-step="${n}"]`);
+  if (panel) panel.classList.add('active');
+  initProgress();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function nextStep() {
+  if (currentStep < TOTAL_STEPS) {
+    currentStep++;
+    showStep(currentStep);
+  } else {
+    submitForm();
+  }
+}
+
+function prevStep() {
+  if (currentStep > 1) { currentStep--; showStep(currentStep); }
+}
+
+function submitForm() {
+  document.getElementById('sendingOverlay').classList.add('active');
+  const data = collectData();
+  setTimeout(() => {
+    document.getElementById('sendingOverlay').classList.remove('active');
+    document.getElementById('mainContent').style.display = 'none';
+    document.getElementById('footerNav').style.display = 'none';
+    document.querySelector('.progress-wrap').style.display = 'none';
+    document.getElementById('thankyou').classList.add('active');
+    window.open(`https://wa.me/${WA_NUMBER}?text=${buildWAMessage(data)}`, '_blank');
+  }, 1800);
+}
+
+initProgress();
+</script>
+</body>
+</html>
