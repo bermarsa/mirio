@@ -1151,27 +1151,73 @@ Idea de campaña: ${d.campana}
   );
 }
 
-function submitForm() {
+async function submitForm() {
   const overlay = document.getElementById('sendingOverlay');
   overlay.classList.add('active');
-
   const data = collectData();
 
-  setTimeout(() => {
-    overlay.classList.remove('active');
+  const AIRTABLE_TOKEN = 'patT4iHzKcNjRUsF9.a6a76231806ac2c45bba27d4f7360f759cf0dfdb68f9a75c6188bda6baba7f6f';
+  const BASE_ID = 'apppz9G0XzbtYn1lS';
+  const TABLE_ID = 'tblWlrhx6WR0acxcp';
 
-    // Hide form, show thank you
-    document.getElementById('mainContent').style.display = 'none';
-    document.getElementById('footerNav').style.display = 'none';
-    document.querySelector('.progress-wrap').style.display = 'none';
-    document.getElementById('thankyou').classList.add('active');
+  const fields = {
+    'Name': data.negocio,
+    'Contacto': data.nombre,
+    'WhatsApp': data.wa,
+    'Email': data.email,
+    'Redes sociales': data.redes,
+    'Giro': data.giro,
+    'Tiempo operando': data.tiempo,
+    'Etapa': data.etapa,
+    'Diferencial': data.diferencial,
+    'Objetivos': data.objetivos,
+    'Objetivo principal': data.objetivo_uno,
+    'Fecha / Lanzamiento': data.fecha_evento,
+    'Medición de éxito': data.exito,
+    'Edad cliente': data.edad,
+    'Género cliente': data.genero,
+    'NSE cliente': data.nse,
+    'Zonas MTY': data.zonas,
+    'Intereses': data.intereses,
+    'Ticket promedio': data.ticket,
+    'Ha intentado': data.intentado,
+    'Frustración principal': data.frustracion,
+    'Freno al crecimiento': data.freno,
+    'Qué ofrece': data.ofrece,
+    'Detalle producto': data.ofrece_producto,
+    'Detalle servicio': data.ofrece_servicio,
+    'Detalle experiencia': data.ofrece_experiencia,
+    'Detalle efectivo': data.ofrece_efectivo,
+    'Espacio físico': data.espacio,
+    'Presupuesto activaciones': data.presupuesto,
+    'Frecuencia reportes': data.reportes,
+    'Líneas rojas': data.nono,
+    'Idea de campaña': data.campana,
+  };
 
-    // Open WhatsApp
-    const waMsg = buildWAMessage(data);
-    const waURL = `https://wa.me/${WA_NUMBER}?text=${waMsg}`;
-    window.open(waURL, '_blank');
+  try {
+    await fetch(`https://api.airtable.com/v0/${BASE_ID}/${TABLE_ID}`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${AIRTABLE_TOKEN}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ fields })
+    });
+  } catch(e) {
+    console.error('Airtable error:', e);
+  }
 
-  }, 1800);
+  overlay.classList.remove('active');
+  document.getElementById('mainContent').style.display = 'none';
+  document.getElementById('footerNav').style.display = 'none';
+  document.querySelector('.progress-wrap').style.display = 'none';
+  document.getElementById('thankyou').classList.add('active');
+
+  // Also open WhatsApp as backup
+  const waMsg = buildWAMessage(data);
+  const waURL = `https://wa.me/${WA_NUMBER}?text=${waMsg}`;
+  window.open(waURL, '_blank');
 }
 
 // Init

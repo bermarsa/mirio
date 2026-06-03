@@ -689,6 +689,10 @@ function collectData() {
     })(),
     estado: getSelected('r_estado'),
     ocupacion: getSelected('r_ocupacion'),
+    intereses_deporte: (() => { const g = document.getElementById('r_inter_deporte'); return g ? [...g.querySelectorAll('.chip.selected')].map(c=>c.dataset.val).join(', ') : ''; })(),
+    intereses_vida: (() => { const g = document.getElementById('r_inter_vida'); return g ? [...g.querySelectorAll('.chip.selected')].map(c=>c.dataset.val).join(', ') : ''; })(),
+    intereses_cultura: (() => { const g = document.getElementById('r_inter_cultura'); return g ? [...g.querySelectorAll('.chip.selected')].map(c=>c.dataset.val).join(', ') : ''; })(),
+    intereses_extra: document.getElementById('r_intereses_extra') ? document.getElementById('r_intereses_extra').value : '',
     intereses: getAllIntereses() + (document.getElementById('r_intereses_extra').value ? ', ' + document.getElementById('r_intereses_extra').value : ''),
     experiencia: getSelected('r_experiencia'),
     campanas: getSelected('r_campanas'),
@@ -795,17 +799,58 @@ function prevStep() {
   if (currentStep > 1) { currentStep--; showStep(currentStep); }
 }
 
-function submitForm() {
+async function submitForm() {
   document.getElementById('sendingOverlay').classList.add('active');
   const data = collectData();
-  setTimeout(() => {
-    document.getElementById('sendingOverlay').classList.remove('active');
-    document.getElementById('mainContent').style.display = 'none';
-    document.getElementById('footerNav').style.display = 'none';
-    document.querySelector('.progress-wrap').style.display = 'none';
-    document.getElementById('thankyou').classList.add('active');
-    window.open(`https://wa.me/${WA_NUMBER}?text=${buildWAMessage(data)}`, '_blank');
-  }, 1800);
+
+  const AIRTABLE_TOKEN = 'patT4iHzKcNjRUsF9.a6a76231806ac2c45bba27d4f7360f759cf0dfdb68f9a75c6188bda6baba7f6f';
+  const BASE_ID = 'apppz9G0XzbtYn1lS';
+  const TABLE_ID = 'tblZxGJnqLnMWT0IP';
+
+  const fields = {
+    'Name': data.nombre,
+    'Instagram': data.ig,
+    'WhatsApp': data.wa,
+    'Email': data.email,
+    'Seguidores': data.followers,
+    'Tipo de contenido': data.contenido,
+    'Frecuencia publicación': data.frecuencia,
+    'Edad': data.edad,
+    'Género': data.genero,
+    'Zona MTY': data.zona,
+    'NSE': data.nse,
+    'Estado civil': data.estado,
+    'Hijos': data.hijos,
+    'Ocupación': data.ocupacion,
+    'Intereses deporte': data.intereses_deporte,
+    'Intereses vida': data.intereses_vida,
+    'Intereses cultura': data.intereses_cultura,
+    'Intereses extra': data.intereses_extra,
+    'Experiencia con marcas': data.experiencia,
+    'Campañas por mes': data.campanas,
+    'Giros preferidos': data.marcas,
+    'Notas': data.extra,
+  };
+
+  try {
+    await fetch(`https://api.airtable.com/v0/${BASE_ID}/${TABLE_ID}`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${AIRTABLE_TOKEN}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ fields })
+    });
+  } catch(e) {
+    console.error('Airtable error:', e);
+  }
+
+  document.getElementById('sendingOverlay').classList.remove('active');
+  document.getElementById('mainContent').style.display = 'none';
+  document.getElementById('footerNav').style.display = 'none';
+  document.querySelector('.progress-wrap').style.display = 'none';
+  document.getElementById('thankyou').classList.add('active');
+  window.open(`https://wa.me/${WA_NUMBER}?text=${buildWAMessage(data)}`, '_blank');
 }
 
 initProgress();
