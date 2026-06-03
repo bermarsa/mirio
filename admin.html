@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MIRIO — Panel Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@200;300;400;600&family=Space+Mono&display=swap" rel="stylesheet">
+<style>
+:root {
+  --red: #CC0000;
+  --red-dark: #990000;
+  --black: #060606;
+  --charcoal: #111111;
+  --dark: #181818;
+  --gray: #2A2A2A;
+  --mid: #555;
+  --light: #999;
+  --off: #F0EEE9;
+  --off2: #E8E5DE;
+  --white: #FFFFFF;
+  --text: #1A1A1A;
+  --sidebar-w: 240px;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:var(--charcoal); color:var(--white); font-family:'Outfit',sans-serif; overflow-x:hidden; }
+
+/* ── LOGIN ── */
+.login-screen {
+  position:fixed; inset:0; background:var(--black);
+  display:flex; align-items:center; justify-content:center;
+  z-index:1000; flex-direction:column; gap:0;
+}
+.login-screen.hidden { display:none; }
+
+.login-box {
+  width:100%; max-width:400px; padding:0 32px;
+}
+
+.login-iso { margin-bottom:40px; text-align:center; }
+
+.login-title {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:48px; letter-spacing:3px; color:var(--white);
+  text-align:center; line-height:1; margin-bottom:6px;
+}
+.login-sub {
+  font-family:'Space Mono',monospace; font-size:9px;
+  letter-spacing:3px; color:var(--light); text-transform:uppercase;
+  text-align:center; margin-bottom:48px;
+}
+
+.login-field { margin-bottom:16px; }
+.login-label {
+  font-family:'Space Mono',monospace; font-size:9px;
+  letter-spacing:2px; color:var(--light); text-transform:uppercase;
+  margin-bottom:8px; display:block;
+}
+.login-input {
+  width:100%; background:var(--charcoal); border:1px solid var(--gray);
+  border-radius:10px; padding:14px 16px; font-family:'Outfit',sans-serif;
+  font-size:15px; color:var(--white); outline:none;
+  transition:border-color 0.2s;
+}
+.login-input:focus { border-color:var(--red); }
+.login-input::placeholder { color:var(--mid); }
+
+.login-btn {
+  width:100%; margin-top:8px; padding:16px;
+  background:var(--red); border:none; border-radius:10px;
+  font-family:'Bebas Neue',sans-serif; font-size:20px;
+  letter-spacing:3px; color:var(--white); cursor:pointer;
+  transition:background 0.2s;
+}
+.login-btn:hover { background:var(--red-dark); }
+
+.login-error {
+  font-size:13px; color:var(--red); text-align:center;
+  margin-top:12px; display:none;
+}
+.login-error.show { display:block; }
+
+/* ── LAYOUT ── */
+.app { display:none; height:100vh; }
+.app.visible { display:flex; }
+
+/* ── SIDEBAR ── */
+.sidebar {
+  width:var(--sidebar-w); background:var(--black);
+  display:flex; flex-direction:column;
+  border-right:1px solid rgba(255,255,255,0.05);
+  flex-shrink:0;
+}
+
+.sidebar-logo {
+  padding:28px 24px 24px;
+  display:flex; align-items:center; gap:12px;
+  border-bottom:1px solid rgba(255,255,255,0.05);
+}
+.sidebar-logo-name {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:22px; letter-spacing:4px; color:var(--white);
+}
+
+.sidebar-user {
+  padding:16px 24px;
+  border-bottom:1px solid rgba(255,255,255,0.05);
+}
+.sidebar-user-label {
+  font-family:'Space Mono',monospace; font-size:8px;
+  letter-spacing:2px; color:var(--light); text-transform:uppercase;
+  margin-bottom:4px; display:block;
+}
+.sidebar-user-name { font-size:13px; color:var(--white); font-weight:500; }
+.sidebar-user-role {
+  font-family:'Space Mono',monospace; font-size:9px;
+  color:var(--red); letter-spacing:1px;
+}
+
+.sidebar-nav { flex:1; padding:16px 0; }
+.nav-section-label {
+  font-family:'Space Mono',monospace; font-size:8px;
+  letter-spacing:3px; color:var(--mid); text-transform:uppercase;
+  padding:8px 24px 6px; display:block;
+}
+.nav-item {
+  display:flex; align-items:center; gap:12px;
+  padding:11px 24px; cursor:pointer;
+  transition:background 0.15s, color 0.15s;
+  border-left:2px solid transparent;
+  font-size:14px; color:var(--light); font-weight:300;
+}
+.nav-item:hover { background:rgba(255,255,255,0.04); color:var(--white); }
+.nav-item.active {
+  background:rgba(204,0,0,0.08);
+  border-left-color:var(--red);
+  color:var(--white);
+}
+.nav-item-icon { font-size:14px; width:18px; text-align:center; }
+.nav-badge {
+  margin-left:auto; background:var(--red); color:var(--white);
+  font-family:'Space Mono',monospace; font-size:9px;
+  padding:2px 7px; border-radius:100px;
+}
+
+.sidebar-bottom {
+  padding:16px 24px;
+  border-top:1px solid rgba(255,255,255,0.05);
+}
+.logout-btn {
+  width:100%; padding:10px; background:transparent;
+  border:1px solid var(--gray); border-radius:8px;
+  font-family:'Space Mono',monospace; font-size:9px;
+  letter-spacing:2px; color:var(--light); cursor:pointer;
+  text-transform:uppercase; transition:all 0.2s;
+}
+.logout-btn:hover { border-color:var(--red); color:var(--red); }
+
+/* ── MAIN ── */
+.main {
+  flex:1; display:flex; flex-direction:column; overflow:hidden;
+}
+
+.topbar {
+  background:var(--charcoal); padding:20px 32px;
+  display:flex; align-items:center; justify-content:space-between;
+  border-bottom:1px solid rgba(255,255,255,0.05);
+  flex-shrink:0;
+}
+.topbar-title {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:28px; letter-spacing:2px; color:var(--white);
+}
+.topbar-sub {
+  font-family:'Space Mono',monospace; font-size:9px;
+  letter-spacing:2px; color:var(--light); margin-top:2px;
+}
+
+.topbar-actions { display:flex; gap:10px; align-items:center; }
+
+.search-wrap { position:relative; }
+.search-input {
+  background:var(--dark); border:1px solid var(--gray);
+  border-radius:8px; padding:9px 14px 9px 36px;
+  font-family:'Outfit',sans-serif; font-size:13px;
+  color:var(--white); outline:none; width:220px;
+  transition:border-color 0.2s;
+}
+.search-input:focus { border-color:var(--red); }
+.search-input::placeholder { color:var(--mid); }
+.search-icon {
+  position:absolute; left:12px; top:50%;
+  transform:translateY(-50%); color:var(--mid); font-size:12px;
+}
+
+.btn-refresh {
+  padding:9px 16px; background:transparent;
+  border:1px solid var(--gray); border-radius:8px;
+  font-family:'Space Mono',monospace; font-size:9px;
+  letter-spacing:2px; color:var(--light); cursor:pointer;
+  text-transform:uppercase; transition:all 0.2s;
+}
+.btn-refresh:hover { border-color:var(--red); color:var(--red); }
+
+/* ── CONTENT ── */
+.content { flex:1; overflow-y:auto; padding:28px 32px; }
+
+/* ── STATS ROW ── */
+.stats-row { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:28px; }
+.stat-card {
+  background:var(--dark); border-radius:12px; padding:20px 24px;
+  border:1px solid rgba(255,255,255,0.04);
+  transition:border-color 0.2s;
+}
+.stat-card:hover { border-color:rgba(204,0,0,0.3); }
+.stat-card:first-child { background:var(--red); border-color:transparent; }
+.stat-label {
+  font-family:'Space Mono',monospace; font-size:8px;
+  letter-spacing:2px; color:rgba(255,255,255,0.4);
+  text-transform:uppercase; margin-bottom:10px; display:block;
+}
+.stat-card:first-child .stat-label { color:rgba(255,255,255,0.6); }
+.stat-num {
+  font-family:'Bebas Neue',sans-serif; font-size:40px;
+  letter-spacing:1px; color:var(--white); line-height:1;
+}
+.stat-trend {
+  font-size:11px; color:rgba(255,255,255,0.3);
+  margin-top:4px; font-weight:300;
+}
+.stat-card:first-child .stat-trend { color:rgba(255,255,255,0.6); }
+
+/* ── TABS ── */
+.view-tabs { display:none; }
+
+/* ── FILTER BAR ── */
+.filter-bar {
+  display:flex; gap:8px; margin-bottom:20px; flex-wrap:wrap;
+}
+.filter-chip {
+  padding:6px 14px; border:1px solid var(--gray); border-radius:100px;
+  font-size:12px; color:var(--light); cursor:pointer;
+  transition:all 0.15s; background:transparent;
+  font-family:'Outfit',sans-serif;
+}
+.filter-chip:hover { border-color:var(--red); color:var(--red); }
+.filter-chip.active { background:var(--red); border-color:var(--red); color:var(--white); }
+
+/* ── CARDS GRID ── */
+.cards-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:12px; }
+
+/* ── EMPRESA CARD ── */
+.empresa-card {
+  background:var(--dark); border-radius:14px;
+  border:1px solid rgba(255,255,255,0.05);
+  overflow:hidden; cursor:pointer;
+  transition:transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+.empresa-card:hover {
+  transform:translateY(-2px);
+  border-color:rgba(204,0,0,0.3);
+  box-shadow:0 8px 32px rgba(0,0,0,0.4);
+}
+.empresa-card-header {
+  padding:20px 20px 16px;
+  display:flex; align-items:flex-start; gap:14px;
+}
+.empresa-avatar {
+  width:44px; height:44px; border-radius:10px;
+  background:var(--red); display:flex; align-items:center; justify-content:center;
+  font-family:'Bebas Neue',sans-serif; font-size:20px; letter-spacing:1px;
+  color:var(--white); flex-shrink:0;
+}
+.empresa-info { flex:1; min-width:0; }
+.empresa-name {
+  font-weight:600; font-size:15px; color:var(--white);
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  margin-bottom:2px;
+}
+.empresa-contact {
+  font-size:12px; color:var(--light); font-weight:300;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.empresa-status { flex-shrink:0; }
+
+.status-badge {
+  font-family:'Space Mono',monospace; font-size:8px;
+  letter-spacing:1px; text-transform:uppercase;
+  padding:3px 9px; border-radius:100px;
+}
+.status-nuevo { background:rgba(255,255,255,0.08); color:var(--light); }
+.status-proceso { background:rgba(204,204,0,0.15); color:#CCCC00; }
+.status-propuesta { background:rgba(0,120,255,0.15); color:#4499FF; }
+.status-activo { background:rgba(0,180,80,0.15); color:#00CC55; }
+.status-descartado { background:rgba(255,0,0,0.1); color:rgba(255,100,100,0.8); }
+
+.empresa-card-body { padding:0 20px 16px; }
+.empresa-meta {
+  display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px;
+}
+.empresa-tag {
+  font-size:11px; color:var(--mid);
+  background:rgba(255,255,255,0.04);
+  padding:3px 10px; border-radius:100px;
+  border:1px solid rgba(255,255,255,0.06);
+}
+.empresa-objetivo {
+  font-size:12px; color:rgba(255,255,255,0.5);
+  font-weight:300; line-height:1.5;
+  display:-webkit-box; -webkit-line-clamp:2;
+  -webkit-box-orient:vertical; overflow:hidden;
+}
+
+.empresa-card-footer {
+  padding:12px 20px;
+  border-top:1px solid rgba(255,255,255,0.05);
+  display:flex; align-items:center; justify-content:space-between;
+}
+.empresa-footer-date {
+  font-family:'Space Mono',monospace; font-size:8px;
+  letter-spacing:1px; color:var(--mid);
+}
+.empresa-footer-arrow { color:var(--red); font-size:14px; }
+
+/* ── EMBAJADOR CARD ── */
+.embajador-card {
+  background:var(--dark); border-radius:14px;
+  border:1px solid rgba(255,255,255,0.05);
+  overflow:hidden; cursor:pointer;
+  transition:transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+.embajador-card:hover {
+  transform:translateY(-2px);
+  border-color:rgba(204,0,0,0.3);
+  box-shadow:0 8px 32px rgba(0,0,0,0.4);
+}
+.embajador-card-header { padding:20px 20px 14px; display:flex; gap:14px; align-items:flex-start; }
+.embajador-avatar {
+  width:48px; height:48px; border-radius:12px;
+  background:linear-gradient(135deg,var(--gray),var(--mid));
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Bebas Neue',sans-serif; font-size:22px; color:var(--white);
+  flex-shrink:0;
+}
+.embajador-info { flex:1; min-width:0; }
+.embajador-name { font-weight:600; font-size:15px; color:var(--white); margin-bottom:2px; }
+.embajador-ig { font-family:'Space Mono',monospace; font-size:10px; color:var(--red); letter-spacing:1px; }
+.embajador-followers {
+  margin-left:auto; text-align:right; flex-shrink:0;
+}
+.followers-num { font-family:'Bebas Neue',sans-serif; font-size:20px; color:var(--white); line-height:1; }
+.followers-label { font-size:9px; color:var(--mid); }
+
+.embajador-tags { padding:0 20px 14px; display:flex; flex-wrap:wrap; gap:6px; }
+.interest-tag {
+  font-size:11px; color:var(--light);
+  background:rgba(255,255,255,0.05);
+  padding:3px 10px; border-radius:100px;
+  border:1px solid rgba(255,255,255,0.07);
+}
+
+.embajador-card-footer {
+  padding:12px 20px;
+  border-top:1px solid rgba(255,255,255,0.05);
+  display:flex; gap:8px; align-items:center;
+}
+.embajador-zona {
+  font-family:'Space Mono',monospace; font-size:8px;
+  color:var(--mid); letter-spacing:1px; flex:1;
+}
+
+/* ── MODAL ── */
+.modal-overlay {
+  position:fixed; inset:0; background:rgba(0,0,0,0.8);
+  z-index:500; display:none; align-items:flex-start; justify-content:flex-end;
+  backdrop-filter:blur(4px);
+}
+.modal-overlay.open { display:flex; }
+
+.modal-panel {
+  width:520px; height:100vh; background:var(--black);
+  overflow-y:auto; animation:slideInRight 0.3s cubic-bezier(0.4,0,0.2,1);
+  border-left:1px solid rgba(255,255,255,0.06);
+}
+@keyframes slideInRight {
+  from { transform:translateX(100%); opacity:0; }
+  to { transform:translateX(0); opacity:1; }
+}
+
+.modal-header {
+  padding:24px 28px;
+  border-bottom:1px solid rgba(255,255,255,0.06);
+  display:flex; align-items:center; gap:16px; position:sticky; top:0;
+  background:var(--black); z-index:2;
+}
+.modal-close {
+  width:32px; height:32px; border-radius:8px;
+  background:var(--gray); border:none; color:var(--light);
+  cursor:pointer; display:flex; align-items:center; justify-content:center;
+  font-size:16px; transition:all 0.15s; flex-shrink:0;
+}
+.modal-close:hover { background:var(--red); color:var(--white); }
+.modal-title { font-family:'Bebas Neue',sans-serif; font-size:24px; letter-spacing:2px; flex:1; }
+.modal-body { padding:28px; }
+
+.detail-section { margin-bottom:28px; }
+.detail-section-title {
+  font-family:'Space Mono',monospace; font-size:8px;
+  letter-spacing:3px; color:var(--red); text-transform:uppercase;
+  margin-bottom:14px; display:flex; align-items:center; gap:8px;
+}
+.detail-section-title::after {
+  content:''; flex:1; height:1px; background:rgba(255,255,255,0.06);
+}
+
+.detail-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:10px; }
+.detail-field { }
+.detail-field-label {
+  font-size:10px; color:var(--mid); font-weight:300;
+  margin-bottom:4px; display:block;
+}
+.detail-field-value {
+  font-size:13px; color:var(--white); font-weight:400;
+  line-height:1.5; word-break:break-word;
+}
+.detail-field-value.empty { color:var(--mid); font-style:italic; }
+
+.detail-tags { display:flex; flex-wrap:wrap; gap:6px; margin-top:6px; }
+.detail-tag {
+  font-size:11px; color:var(--light);
+  background:rgba(255,255,255,0.06); padding:4px 12px;
+  border-radius:100px; border:1px solid rgba(255,255,255,0.08);
+}
+
+.status-select {
+  width:100%; background:var(--dark); border:1px solid var(--gray);
+  border-radius:8px; padding:10px 14px; color:var(--white);
+  font-family:'Outfit',sans-serif; font-size:13px;
+  outline:none; cursor:pointer; margin-top:8px;
+  transition:border-color 0.2s;
+}
+.status-select:focus { border-color:var(--red); }
+
+.detail-notes {
+  width:100%; background:var(--dark); border:1px solid var(--gray);
+  border-radius:8px; padding:12px 14px; color:var(--white);
+  font-family:'Outfit',sans-serif; font-size:13px; font-weight:300;
+  outline:none; resize:vertical; min-height:80px; line-height:1.5;
+  transition:border-color 0.2s; margin-top:8px;
+}
+.detail-notes:focus { border-color:var(--red); }
+
+.save-btn {
+  width:100%; padding:14px; background:var(--red); border:none;
+  border-radius:10px; font-family:'Bebas Neue',sans-serif;
+  font-size:18px; letter-spacing:2px; color:var(--white);
+  cursor:pointer; margin-top:16px; transition:background 0.2s;
+}
+.save-btn:hover { background:var(--red-dark); }
+
+/* ── LOADING ── */
+.loading-state {
+  display:flex; flex-direction:column; align-items:center;
+  justify-content:center; padding:80px 32px; gap:16px;
+}
+.loading-spinner {
+  width:32px; height:32px; border:2px solid rgba(255,255,255,0.1);
+  border-top-color:var(--red); border-radius:50%;
+  animation:spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform:rotate(360deg); } }
+.loading-text {
+  font-family:'Space Mono',monospace; font-size:9px;
+  letter-spacing:3px; color:var(--mid); text-transform:uppercase;
+}
+
+.empty-state {
+  display:flex; flex-direction:column; align-items:center;
+  justify-content:center; padding:80px 32px; gap:12px; text-align:center;
+}
+.empty-icon { font-size:40px; color:var(--gray); }
+.empty-text { font-size:14px; color:var(--mid); font-weight:300; }
+
+/* ── VIEW PANELS ── */
+.view-panel { display:none; }
+.view-panel.active { display:block; }
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width:4px; }
+::-webkit-scrollbar-track { background:transparent; }
+::-webkit-scrollbar-thumb { background:var(--gray); border-radius:2px; }
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-box">
+    <div class="login-iso" style="display:flex;justify-content:center;">
+      <svg width="80" height="52" viewBox="0 0 110 70" fill="none">
+        <line x1="5" y1="22" x2="105" y2="22" stroke="#CC0000" stroke-width="4" stroke-linecap="round"/>
+        <line x1="5" y1="48" x2="105" y2="48" stroke="#CC0000" stroke-width="1.5" stroke-linecap="round" opacity="0.35"/>
+        <circle cx="55" cy="35" r="4" fill="#CC0000"/>
+      </svg>
+    </div>
+    <h1 class="login-title">MIRIO</h1>
+    <p class="login-sub">Panel Administrativo</p>
+    <div class="login-field">
+      <label class="login-label">Usuario</label>
+      <input type="text" class="login-input" id="loginUser" placeholder="tu usuario" autocomplete="off">
+    </div>
+    <div class="login-field">
+      <label class="login-label">Contraseña</label>
+      <input type="password" class="login-input" id="loginPass" placeholder="••••••••">
+    </div>
+    <button class="login-btn" onclick="doLogin()">ENTRAR →</button>
+    <p class="login-error" id="loginError">Usuario o contraseña incorrectos</p>
+  </div>
+</div>
+
+<!-- APP -->
+<div class="app" id="app">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <svg width="40" height="26" viewBox="0 0 110 60" fill="none">
+        <line x1="5" y1="18" x2="105" y2="18" stroke="#CC0000" stroke-width="4" stroke-linecap="round"/>
+        <line x1="5" y1="42" x2="105" y2="42" stroke="#CC0000" stroke-width="1.5" stroke-linecap="round" opacity="0.4"/>
+        <circle cx="55" cy="30" r="3.5" fill="#CC0000"/>
+      </svg>
+      <span class="sidebar-logo-name">MIRIO</span>
+    </div>
+
+    <div class="sidebar-user">
+      <span class="sidebar-user-label">Sesión activa</span>
+      <p class="sidebar-user-name" id="sidebarUserName">—</p>
+      <p class="sidebar-user-role">Admin</p>
+    </div>
+
+    <nav class="sidebar-nav">
+      <span class="nav-section-label">Principal</span>
+      <div class="nav-item active" onclick="showView('dashboard')" id="nav-dashboard">
+        <span class="nav-item-icon">◎</span> Dashboard
+      </div>
+
+      <span class="nav-section-label">CRM</span>
+      <div class="nav-item" onclick="showView('empresas')" id="nav-empresas">
+        <span class="nav-item-icon">✦</span> Empresas
+        <span class="nav-badge" id="badge-empresas">0</span>
+      </div>
+      <div class="nav-item" onclick="showView('embajadores')" id="nav-embajadores">
+        <span class="nav-item-icon">◈</span> Embajadores
+        <span class="nav-badge" id="badge-embajadores">0</span>
+      </div>
+    </nav>
+
+    <div class="sidebar-bottom">
+      <button class="logout-btn" onclick="doLogout()">Cerrar sesión</button>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+    <div class="topbar">
+      <div>
+        <p class="topbar-title" id="topbarTitle">Dashboard</p>
+        <p class="topbar-sub" id="topbarSub">Bienvenido al panel de MIRIO</p>
+      </div>
+      <div class="topbar-actions">
+        <div class="search-wrap">
+          <span class="search-icon">⌕</span>
+          <input type="text" class="search-input" id="searchInput" placeholder="Buscar..." oninput="filterCards()">
+        </div>
+        <button class="btn-refresh" onclick="loadAll()">↻ Actualizar</button>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- DASHBOARD -->
+      <div class="view-panel active" id="view-dashboard">
+        <div class="stats-row" id="statsRow">
+          <div class="stat-card">
+            <span class="stat-label">Total empresas</span>
+            <p class="stat-num" id="stat-empresas">—</p>
+            <p class="stat-trend">Clientes registrados</p>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Embajadores</span>
+            <p class="stat-num" id="stat-embajadores">—</p>
+            <p class="stat-trend">En el roster</p>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Activos</span>
+            <p class="stat-num" id="stat-activos">—</p>
+            <p class="stat-trend">Clientes activos</p>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Nuevos</span>
+            <p class="stat-num" id="stat-nuevos">—</p>
+            <p class="stat-trend">Sin atender</p>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:4px;">
+          <div>
+            <p style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:3px;color:var(--red);text-transform:uppercase;margin-bottom:14px;">Últimas empresas</p>
+            <div id="dash-empresas-list"></div>
+          </div>
+          <div>
+            <p style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:3px;color:var(--red);text-transform:uppercase;margin-bottom:14px;">Últimos embajadores</p>
+            <div id="dash-embajadores-list"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EMPRESAS -->
+      <div class="view-panel" id="view-empresas">
+        <div class="filter-bar" id="empresa-filters">
+          <button class="filter-chip active" onclick="filterByStatus('all','empresa')">Todos</button>
+          <button class="filter-chip" onclick="filterByStatus('Nuevo','empresa')">Nuevos</button>
+          <button class="filter-chip" onclick="filterByStatus('En proceso','empresa')">En proceso</button>
+          <button class="filter-chip" onclick="filterByStatus('Propuesta enviada','empresa')">Propuesta enviada</button>
+          <button class="filter-chip" onclick="filterByStatus('Cliente activo','empresa')">Activos</button>
+        </div>
+        <div class="cards-grid" id="empresas-grid"></div>
+      </div>
+
+      <!-- EMBAJADORES -->
+      <div class="view-panel" id="view-embajadores">
+        <div class="filter-bar" id="embajador-filters">
+          <button class="filter-chip active" onclick="filterByStatus('all','embajador')">Todos</button>
+          <button class="filter-chip" onclick="filterByStatus('Nuevo','embajador')">Nuevos</button>
+          <button class="filter-chip" onclick="filterByStatus('Activo','embajador')">Activos</button>
+          <button class="filter-chip" onclick="filterByStatus('En campaña','embajador')">En campaña</button>
+          <button class="filter-chip" onclick="filterByStatus('Pausado','embajador')">Pausados</button>
+        </div>
+        <div class="cards-grid" id="embajadores-grid"></div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<!-- MODAL EMPRESA -->
+<div class="modal-overlay" id="modalEmpresa" onclick="closeModal('modalEmpresa',event)">
+  <div class="modal-panel">
+    <div class="modal-header">
+      <button class="modal-close" onclick="document.getElementById('modalEmpresa').classList.remove('open')">✕</button>
+      <p class="modal-title" id="modalEmpresaTitle">—</p>
+      <span class="status-badge status-nuevo" id="modalEmpresaStatus">Nuevo</span>
+    </div>
+    <div class="modal-body" id="modalEmpresaBody"></div>
+  </div>
+</div>
+
+<!-- MODAL EMBAJADOR -->
+<div class="modal-overlay" id="modalEmbajador" onclick="closeModal('modalEmbajador',event)">
+  <div class="modal-panel">
+    <div class="modal-header">
+      <button class="modal-close" onclick="document.getElementById('modalEmbajador').classList.remove('open')">✕</button>
+      <p class="modal-title" id="modalEmbajadorTitle">—</p>
+      <span class="status-badge status-nuevo" id="modalEmbajadorStatus">Nuevo</span>
+    </div>
+    <div class="modal-body" id="modalEmbajadorBody"></div>
+  </div>
+</div>
+
+<script>
+const USERS = {
+  'bermarsa': { pass: 'Berns1323', name: 'Bernardo Martínez', role: 'admin' }
+};
+
+const AT_TOKEN = 'patT4iHzKcNjRUsF9.a6a76231806ac2c45bba27d4f7360f759cf0dfdb68f9a75c6188bda6baba7f6f';
+const BASE_ID = 'apppz9G0XzbtYn1lS';
+const TABLE_EMPRESAS = 'tblWlrhx6WR0acxcp';
+const TABLE_EMBAJADORES = 'tblZxGJnqLnMWT0IP';
+
+let allEmpresas = [];
+let allEmbajadores = [];
+let currentUser = null;
+let currentEmpresaFilter = 'all';
+let currentEmbajadorFilter = 'all';
+
+// ── AUTH ──
+function doLogin() {
+  const user = document.getElementById('loginUser').value.trim();
+  const pass = document.getElementById('loginPass').value;
+  const err = document.getElementById('loginError');
+
+  if (USERS[user] && USERS[user].pass === pass) {
+    currentUser = { username: user, ...USERS[user] };
+    document.getElementById('loginScreen').classList.add('hidden');
+    document.getElementById('app').classList.add('visible');
+    document.getElementById('sidebarUserName').textContent = currentUser.name;
+    err.classList.remove('show');
+    loadAll();
+  } else {
+    err.classList.add('show');
+  }
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !document.getElementById('loginScreen').classList.contains('hidden')) doLogin();
+});
+
+function doLogout() {
+  currentUser = null;
+  document.getElementById('loginScreen').classList.remove('hidden');
+  document.getElementById('app').classList.remove('visible');
+  document.getElementById('loginUser').value = '';
+  document.getElementById('loginPass').value = '';
+}
+
+// ── NAVIGATION ──
+function showView(view) {
+  document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('view-' + view).classList.add('active');
+  document.getElementById('nav-' + view).classList.add('active');
+
+  const titles = {
+    dashboard: ['Dashboard', 'Resumen general de MIRIO'],
+    empresas: ['Empresas', 'Clientes y prospectos'],
+    embajadores: ['Embajadores', 'Roster completo']
+  };
+  document.getElementById('topbarTitle').textContent = titles[view][0];
+  document.getElementById('topbarSub').textContent = titles[view][1];
+  document.getElementById('searchInput').value = '';
+}
+
+// ── AIRTABLE API ──
+async function fetchRecords(tableId) {
+  const res = await fetch(`https://api.airtable.com/v0/${BASE_ID}/${tableId}?pageSize=100`, {
+    headers: { 'Authorization': `Bearer ${AT_TOKEN}` }
+  });
+  const data = await res.json();
+  return data.records || [];
+}
+
+async function updateRecord(tableId, recordId, fields) {
+  await fetch(`https://api.airtable.com/v0/${BASE_ID}/${tableId}/${recordId}`, {
+    method: 'PATCH',
+    headers: { 'Authorization': `Bearer ${AT_TOKEN}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ fields })
+  });
+}
+
+async function loadAll() {
+  showLoading('empresas-grid');
+  showLoading('embajadores-grid');
+
+  try {
+    const [empresas, embajadores] = await Promise.all([
+      fetchRecords(TABLE_EMPRESAS),
+      fetchRecords(TABLE_EMBAJADORES)
+    ]);
+    allEmpresas = empresas;
+    allEmbajadores = embajadores;
+    renderStats();
+    renderEmpresas(allEmpresas);
+    renderEmbajadores(allEmbajadores);
+    renderDashboard();
+  } catch(e) {
+    console.error('Error loading:', e);
+  }
+}
+
+function showLoading(gridId) {
+  document.getElementById(gridId).innerHTML = `
+    <div class="loading-state" style="grid-column:1/-1">
+      <div class="loading-spinner"></div>
+      <p class="loading-text">Cargando datos...</p>
+    </div>`;
+}
+
+// ── STATS ──
+function renderStats() {
+  document.getElementById('stat-empresas').textContent = allEmpresas.length;
+  document.getElementById('stat-embajadores').textContent = allEmbajadores.length;
+  document.getElementById('stat-activos').textContent = allEmpresas.filter(e => e.fields['Estado'] === 'Cliente activo').length;
+  document.getElementById('stat-nuevos').textContent = allEmpresas.filter(e => !e.fields['Estado'] || e.fields['Estado'] === 'Nuevo').length;
+  document.getElementById('badge-empresas').textContent = allEmpresas.length;
+  document.getElementById('badge-embajadores').textContent = allEmbajadores.length;
+}
+
+// ── DASHBOARD ──
+function renderDashboard() {
+  const eList = document.getElementById('dash-empresas-list');
+  const emList = document.getElementById('dash-embajadores-list');
+
+  const last5e = [...allEmpresas].reverse().slice(0,5);
+  const last5em = [...allEmbajadores].reverse().slice(0,5);
+
+  eList.innerHTML = last5e.length ? last5e.map(r => `
+    <div onclick="openEmpresaModal('${r.id}')" style="display:flex;align-items:center;gap:12px;padding:12px;background:var(--dark);border-radius:10px;margin-bottom:8px;cursor:pointer;transition:background 0.15s;border:1px solid rgba(255,255,255,0.04);" onmouseover="this.style.background='#1E1E1E'" onmouseout="this.style.background='var(--dark)'">
+      <div style="width:36px;height:36px;border-radius:8px;background:var(--red);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:16px;color:white;flex-shrink:0;">${(r.fields['Name']||'?')[0].toUpperCase()}</div>
+      <div style="flex:1;min-width:0;">
+        <p style="font-size:13px;font-weight:500;color:white;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${r.fields['Name']||'Sin nombre'}</p>
+        <p style="font-size:11px;color:var(--mid);font-weight:300;">${r.fields['Giro']||'—'}</p>
+      </div>
+      <span class="status-badge ${getStatusClass(r.fields['Estado'])}">${r.fields['Estado']||'Nuevo'}</span>
+    </div>`).join('') : '<p style="color:var(--mid);font-size:13px;text-align:center;padding:24px;">Sin registros aún</p>';
+
+  emList.innerHTML = last5em.length ? last5em.map(r => `
+    <div onclick="openEmbajadorModal('${r.id}')" style="display:flex;align-items:center;gap:12px;padding:12px;background:var(--dark);border-radius:10px;margin-bottom:8px;cursor:pointer;transition:background 0.15s;border:1px solid rgba(255,255,255,0.04);" onmouseover="this.style.background='#1E1E1E'" onmouseout="this.style.background='var(--dark)'">
+      <div style="width:36px;height:36px;border-radius:8px;background:var(--gray);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:16px;color:white;flex-shrink:0;">${(r.fields['Name']||'?')[0].toUpperCase()}</div>
+      <div style="flex:1;min-width:0;">
+        <p style="font-size:13px;font-weight:500;color:white;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${r.fields['Name']||'Sin nombre'}</p>
+        <p style="font-size:11px;color:var(--red);font-family:'Space Mono',monospace;">${r.fields['Instagram']||'—'}</p>
+      </div>
+      <p style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:white;">${r.fields['Seguidores']||'—'}</p>
+    </div>`).join('') : '<p style="color:var(--mid);font-size:13px;text-align:center;padding:24px;">Sin registros aún</p>';
+}
+
+// ── EMPRESAS ──
+function getStatusClass(status) {
+  const map = { 'Nuevo':'status-nuevo','En proceso':'status-proceso','Propuesta enviada':'status-propuesta','Cliente activo':'status-activo','Descartado':'status-descartado' };
+  return map[status] || 'status-nuevo';
+}
+
+function renderEmpresas(records) {
+  const grid = document.getElementById('empresas-grid');
+  if (!records.length) {
+    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><div class="empty-icon">✦</div><p class="empty-text">No hay empresas registradas aún</p></div>`;
+    return;
+  }
+  grid.innerHTML = records.map(r => {
+    const f = r.fields;
+    const initial = (f['Name']||'?')[0].toUpperCase();
+    return `
+    <div class="empresa-card" onclick="openEmpresaModal('${r.id}')">
+      <div class="empresa-card-header">
+        <div class="empresa-avatar">${initial}</div>
+        <div class="empresa-info">
+          <p class="empresa-name">${f['Name']||'Sin nombre'}</p>
+          <p class="empresa-contact">${f['Contacto']||''} ${f['WhatsApp'] ? '· '+f['WhatsApp'] : ''}</p>
+        </div>
+        <div class="empresa-status">
+          <span class="status-badge ${getStatusClass(f['Estado'])}">${f['Estado']||'Nuevo'}</span>
+        </div>
+      </div>
+      <div class="empresa-card-body">
+        <div class="empresa-meta">
+          ${f['Giro'] ? `<span class="empresa-tag">${f['Giro'].split(',')[0]}</span>` : ''}
+          ${f['Zonas MTY'] ? `<span class="empresa-tag">📍 ${f['Zonas MTY'].split(',')[0]}</span>` : ''}
+          ${f['Ticket promedio'] ? `<span class="empresa-tag">${f['Ticket promedio']}</span>` : ''}
+        </div>
+        <p class="empresa-objetivo">${f['Objetivo principal'] || f['Objetivos'] || 'Sin objetivo registrado'}</p>
+      </div>
+      <div class="empresa-card-footer">
+        <span class="empresa-footer-date">${f['Email']||'—'}</span>
+        <span class="empresa-footer-arrow">→</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function openEmpresaModal(id) {
+  const r = allEmpresas.find(e => e.id === id);
+  if (!r) return;
+  const f = r.fields;
+  document.getElementById('modalEmpresaTitle').textContent = f['Name'] || 'Sin nombre';
+  const statusEl = document.getElementById('modalEmpresaStatus');
+  statusEl.textContent = f['Estado'] || 'Nuevo';
+  statusEl.className = 'status-badge ' + getStatusClass(f['Estado']);
+
+  const sections = [
+    { title: 'Contacto', fields: [
+      ['Negocio', f['Name']], ['Contacto', f['Contacto']], ['WhatsApp', f['WhatsApp']], ['Email', f['Email']], ['Redes', f['Redes sociales']]
+    ]},
+    { title: 'Negocio', fields: [
+      ['Giro', f['Giro']], ['Tiempo operando', f['Tiempo operando']], ['Etapa', f['Etapa']], ['Diferencial', f['Diferencial']]
+    ]},
+    { title: 'Objetivos', fields: [
+      ['Objetivos', f['Objetivos']], ['Objetivo principal', f['Objetivo principal']], ['Lanzamiento', f['Fecha / Lanzamiento']], ['Medición de éxito', f['Medición de éxito']]
+    ]},
+    { title: 'Cliente ideal', fields: [
+      ['Edad', f['Edad cliente']], ['Género', f['Género cliente']], ['NSE', f['NSE cliente']], ['Zonas MTY', f['Zonas MTY']], ['Intereses', f['Intereses']], ['Ticket promedio', f['Ticket promedio']]
+    ]},
+    { title: 'Frustraciones', fields: [
+      ['Ha intentado', f['Ha intentado']], ['Frustración', f['Frustración principal']], ['Freno al crecimiento', f['Freno al crecimiento']]
+    ]},
+    { title: 'Operación', fields: [
+      ['Qué ofrece', f['Qué ofrece']], ['Detalle producto', f['Detalle producto']], ['Detalle servicio', f['Detalle servicio']], ['Detalle experiencia', f['Detalle experiencia']], ['Espacio físico', f['Espacio físico']], ['Presupuesto', f['Presupuesto activaciones']], ['Reportes', f['Frecuencia reportes']]
+    ]},
+    { title: 'Campaña', fields: [
+      ['Líneas rojas', f['Líneas rojas']], ['Idea de campaña', f['Idea de campaña']]
+    ]}
+  ];
+
+  document.getElementById('modalEmpresaBody').innerHTML = sections.map(s => `
+    <div class="detail-section">
+      <p class="detail-section-title">${s.title}</p>
+      <div class="detail-row" style="grid-template-columns:1fr 1fr;">
+        ${s.fields.map(([label, val]) => `
+          <div class="detail-field">
+            <span class="detail-field-label">${label}</span>
+            <p class="detail-field-value ${!val ? 'empty' : ''}">${val || '—'}</p>
+          </div>`).join('')}
+      </div>
+    </div>`).join('') + `
+    <div class="detail-section">
+      <p class="detail-section-title">Estado & Notas</p>
+      <span class="detail-field-label">Estado del cliente</span>
+      <select class="status-select" id="empresaStatusSelect" onchange="updateEmpresaStatus('${id}',this.value)">
+        <option ${f['Estado']==='Nuevo'?'selected':''}>Nuevo</option>
+        <option ${f['Estado']==='En proceso'?'selected':''}>En proceso</option>
+        <option ${f['Estado']==='Propuesta enviada'?'selected':''}>Propuesta enviada</option>
+        <option ${f['Estado']==='Cliente activo'?'selected':''}>Cliente activo</option>
+        <option ${f['Estado']==='Descartado'?'selected':''}>Descartado</option>
+      </select>
+    </div>`;
+
+  document.getElementById('modalEmpresa').classList.add('open');
+}
+
+async function updateEmpresaStatus(id, status) {
+  await updateRecord(TABLE_EMPRESAS, id, { 'Estado': status });
+  const r = allEmpresas.find(e => e.id === id);
+  if (r) r.fields['Estado'] = status;
+  renderEmpresas(getFilteredEmpresas());
+  renderStats();
+  renderDashboard();
+  const statusEl = document.getElementById('modalEmpresaStatus');
+  statusEl.textContent = status;
+  statusEl.className = 'status-badge ' + getStatusClass(status);
+}
+
+// ── EMBAJADORES ──
+function renderEmbajadores(records) {
+  const grid = document.getElementById('embajadores-grid');
+  if (!records.length) {
+    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><div class="empty-icon">◈</div><p class="empty-text">No hay embajadores registrados aún</p></div>`;
+    return;
+  }
+  grid.innerHTML = records.map(r => {
+    const f = r.fields;
+    const initial = (f['Name']||'?')[0].toUpperCase();
+    const intereses = [f['Intereses deporte'], f['Intereses vida'], f['Intereses cultura']]
+      .filter(Boolean).join(', ').split(',').slice(0,4).map(i => i.trim()).filter(Boolean);
+    return `
+    <div class="embajador-card" onclick="openEmbajadorModal('${r.id}')">
+      <div class="embajador-card-header">
+        <div class="embajador-avatar">${initial}</div>
+        <div class="embajador-info">
+          <p class="embajador-name">${f['Name']||'Sin nombre'}</p>
+          <p class="embajador-ig">${f['Instagram']||'—'}</p>
+        </div>
+        <div class="embajador-followers">
+          <p class="followers-num">${f['Seguidores']||'—'}</p>
+          <p class="followers-label">seguidores</p>
+        </div>
+      </div>
+      ${intereses.length ? `<div class="embajador-tags">${intereses.map(i=>`<span class="interest-tag">${i}</span>`).join('')}${intereses.length < (f['Intereses deporte']||'').split(',').length ? '<span class="interest-tag">+más</span>':''}</div>` : ''}
+      <div class="embajador-card-footer">
+        <span class="embajador-zona">${f['Zona MTY']||'—'} · ${f['NSE']||'—'} · ${f['Edad']||'—'} años</span>
+        <span class="status-badge ${getEmbajadorStatusClass(f['Estado'])}">${f['Estado']||'Nuevo'}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function getEmbajadorStatusClass(status) {
+  const map = { 'Nuevo':'status-nuevo','Activo':'status-activo','En campaña':'status-propuesta','Pausado':'status-proceso','Descartado':'status-descartado' };
+  return map[status] || 'status-nuevo';
+}
+
+function openEmbajadorModal(id) {
+  const r = allEmbajadores.find(e => e.id === id);
+  if (!r) return;
+  const f = r.fields;
+  document.getElementById('modalEmbajadorTitle').textContent = f['Name'] || 'Sin nombre';
+  const statusEl = document.getElementById('modalEmbajadorStatus');
+  statusEl.textContent = f['Estado'] || 'Nuevo';
+  statusEl.className = 'status-badge ' + getEmbajadorStatusClass(f['Estado']);
+
+  const allIntereses = [f['Intereses deporte'], f['Intereses vida'], f['Intereses cultura'], f['Intereses extra']]
+    .filter(Boolean).join(', ');
+
+  document.getElementById('modalEmbajadorBody').innerHTML = `
+    <div class="detail-section">
+      <p class="detail-section-title">Perfil</p>
+      <div class="detail-row">
+        <div class="detail-field"><span class="detail-field-label">Instagram</span><p class="detail-field-value" style="color:var(--red);">${f['Instagram']||'—'}</p></div>
+        <div class="detail-field"><span class="detail-field-label">WhatsApp</span><p class="detail-field-value">${f['WhatsApp']||'—'}</p></div>
+        <div class="detail-field"><span class="detail-field-label">Email</span><p class="detail-field-value">${f['Email']||'—'}</p></div>
+        <div class="detail-field"><span class="detail-field-label">Seguidores</span><p class="detail-field-value" style="font-family:'Bebas Neue',sans-serif;font-size:24px;">${f['Seguidores']||'—'}</p></div>
+        <div class="detail-field"><span class="detail-field-label">Tipo de contenido</span><p class="detail-field-value">${f['Tipo de contenido']||'—'}</p></div>
+        <div class="detail-field"><span class="detail-field-label">Frecuencia</span><p class="detail-field-value">${f['Frecuencia publicación']||'—'}</p></div>
+      </div>
+    </div>
+    <div class="detail-section">
+      <p class="detail-section-title">Quién es</p>
+      <div class="detail-row">
+        <div class="detail-field"><span class="detail-field-label">Edad</span><p class="detail-field-value">${f['Edad']||'—'}</p></div>
+        <div class="detail-field"><span class="detail-field-label">Género</span><p class="detail-field-value">${f['Género']||'—'}</p></div>
+        <div class="detail-field"><span class="detail-field-label">Zona MTY</span><p class="detail-field-value">${f['Zona MTY']||'—'}</p></div>
+        <div class="detail-field"><span class="detail-field-label">NSE</span><p class="detail-field-value">${f['NSE']||'—'}</p></div>
+        <div class="detail-field"><span class="detail-field-label">Estado civil</span><p class="detail-field-value">${f['Estado civil']||'—'}</p></div>
+        <div class="detail-field"><span class="detail-field-label">Hijos</span><p class="detail-field-value">${f['Hijos']||'—'}</p></div>
+        <div class="detail-field"><span class="detail-field-label">Ocupación</span><p class="detail-field-value">${f['Ocupación']||'—'}</p></div>
+        <div class="detail-field"><span class="detail-field-label">Experiencia con marcas</span><p class="detail-field-value">${f['Experiencia con marcas']||'—'}</p></div>
+      </div>
+    </div>
+    <div class="detail-section">
+      <p class="detail-section-title">Intereses</p>
+      <div class="detail-tags">
+        ${allIntereses ? allIntereses.split(',').map(i=>`<span class="detail-tag">${i.trim()}</span>`).join('') : '<p style="color:var(--mid)">—</p>'}
+      </div>
+    </div>
+    <div class="detail-section">
+      <p class="detail-section-title">Disponibilidad</p>
+      <div class="detail-row">
+        <div class="detail-field"><span class="detail-field-label">Campañas por mes</span><p class="detail-field-value">${f['Campañas por mes']||'—'}</p></div>
+        <div class="detail-field"><span class="detail-field-label">Giros preferidos</span><p class="detail-field-value">${f['Giros preferidos']||'—'}</p></div>
+      </div>
+      ${f['Notas'] ? `<div class="detail-field" style="margin-top:8px;"><span class="detail-field-label">Notas</span><p class="detail-field-value">${f['Notas']}</p></div>` : ''}
+    </div>
+    <div class="detail-section">
+      <p class="detail-section-title">Estado</p>
+      <select class="status-select" onchange="updateEmbajadorStatus('${id}',this.value)">
+        <option ${f['Estado']==='Nuevo'?'selected':''}>Nuevo</option>
+        <option ${f['Estado']==='Activo'?'selected':''}>Activo</option>
+        <option ${f['Estado']==='En campaña'?'selected':''}>En campaña</option>
+        <option ${f['Estado']==='Pausado'?'selected':''}>Pausado</option>
+        <option ${f['Estado']==='Descartado'?'selected':''}>Descartado</option>
+      </select>
+    </div>`;
+
+  document.getElementById('modalEmbajador').classList.add('open');
+}
+
+async function updateEmbajadorStatus(id, status) {
+  await updateRecord(TABLE_EMBAJADORES, id, { 'Estado': status });
+  const r = allEmbajadores.find(e => e.id === id);
+  if (r) r.fields['Estado'] = status;
+  renderEmbajadores(getFilteredEmbajadores());
+  renderStats();
+  const statusEl = document.getElementById('modalEmbajadorStatus');
+  statusEl.textContent = status;
+  statusEl.className = 'status-badge ' + getEmbajadorStatusClass(status);
+}
+
+// ── FILTERS ──
+function filterByStatus(status, type) {
+  if (type === 'empresa') {
+    currentEmpresaFilter = status;
+    document.querySelectorAll('#empresa-filters .filter-chip').forEach(c => c.classList.remove('active'));
+    event.target.classList.add('active');
+    renderEmpresas(getFilteredEmpresas());
+  } else {
+    currentEmbajadorFilter = status;
+    document.querySelectorAll('#embajador-filters .filter-chip').forEach(c => c.classList.remove('active'));
+    event.target.classList.add('active');
+    renderEmbajadores(getFilteredEmbajadores());
+  }
+}
+
+function getFilteredEmpresas() {
+  const search = document.getElementById('searchInput').value.toLowerCase();
+  return allEmpresas.filter(r => {
+    const f = r.fields;
+    const matchStatus = currentEmpresaFilter === 'all' || f['Estado'] === currentEmpresaFilter || (!f['Estado'] && currentEmpresaFilter === 'Nuevo');
+    const matchSearch = !search || Object.values(f).some(v => v && String(v).toLowerCase().includes(search));
+    return matchStatus && matchSearch;
+  });
+}
+
+function getFilteredEmbajadores() {
+  const search = document.getElementById('searchInput').value.toLowerCase();
+  return allEmbajadores.filter(r => {
+    const f = r.fields;
+    const matchStatus = currentEmbajadorFilter === 'all' || f['Estado'] === currentEmbajadorFilter || (!f['Estado'] && currentEmbajadorFilter === 'Nuevo');
+    const matchSearch = !search || Object.values(f).some(v => v && String(v).toLowerCase().includes(search));
+    return matchStatus && matchSearch;
+  });
+}
+
+function filterCards() {
+  const activeView = document.querySelector('.view-panel.active').id;
+  if (activeView === 'view-empresas') renderEmpresas(getFilteredEmpresas());
+  else if (activeView === 'view-embajadores') renderEmbajadores(getFilteredEmbajadores());
+}
+
+// ── MODAL ──
+function closeModal(id, event) {
+  if (event.target === document.getElementById(id)) {
+    document.getElementById(id).classList.remove('open');
+  }
+}
+</script>
+</body>
+</html>
