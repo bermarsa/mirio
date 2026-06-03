@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MIRIO — Presencia real, no solo números.</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@200;300;400;600&family=Space+Mono&display=swap" rel="stylesheet">
+<style>
+:root {
+  --red: #CC0000;
+  --red-dark: #990000;
+  --black: #060606;
+  --charcoal: #111111;
+  --dark: #181818;
+  --off: #F0EEE9;
+  --off2: #E8E5DE;
+  --white: #FFFFFF;
+  --gray: #888;
+  --light-gray: #D5D2CB;
+  --text: #1A1A1A;
+  --text-muted: #666;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body { background:var(--off); color:var(--text); font-family:'Outfit',sans-serif; overflow-x:hidden; }
+
+/* ── NAV ── */
+nav {
+  position:fixed; top:0; left:0; right:0; z-index:100;
+  padding:20px 48px;
+  display:flex; align-items:center; justify-content:space-between;
+  transition:background 0.3s, border-color 0.3s;
+}
+nav.scrolled {
+  background:rgba(6,6,6,0.95);
+  border-bottom:1px solid rgba(255,255,255,0.05);
+  backdrop-filter:blur(12px);
+}
+.nav-logo { display:flex; align-items:center; gap:14px; text-decoration:none; }
+.nav-name { font-family:'Bebas Neue',sans-serif; font-size:24px; letter-spacing:4px; color:var(--white); }
+.nav-links { display:flex; align-items:center; gap:32px; }
+.nav-link {
+  font-family:'Space Mono',monospace; font-size:9px; letter-spacing:3px;
+  text-transform:uppercase; color:rgba(255,255,255,0.5); text-decoration:none;
+  transition:color 0.2s;
+}
+.nav-link:hover { color:var(--white); }
+.nav-cta {
+  padding:9px 20px; background:var(--red); border-radius:100px;
+  font-family:'Space Mono',monospace; font-size:9px; letter-spacing:2px;
+  text-transform:uppercase; color:var(--white); text-decoration:none;
+  transition:background 0.2s;
+}
+.nav-cta:hover { background:var(--red-dark); }
+
+/* ── HERO ── */
+.hero {
+  min-height:100vh;
+  background:var(--black);
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  text-align:center;
+  padding:120px 24px 80px;
+  position:relative;
+  overflow:hidden;
+}
+
+/* subtle grain texture */
+.hero::before {
+  content:'';
+  position:absolute; inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  opacity:0.4; pointer-events:none;
+}
+
+/* big MIRIO watermark */
+.hero-wm {
+  position:absolute;
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(120px,22vw,320px);
+  color:rgba(255,255,255,0.025);
+  letter-spacing:8px;
+  top:50%; left:50%;
+  transform:translate(-50%,-50%);
+  pointer-events:none;
+  white-space:nowrap;
+  user-select:none;
+}
+
+.hero-content { position:relative; z-index:2; max-width:720px; }
+
+.hero-eyebrow {
+  font-family:'Space Mono',monospace; font-size:9px; letter-spacing:5px;
+  color:var(--red); text-transform:uppercase; margin-bottom:32px;
+  opacity:0; animation:fadeUp 0.8s ease forwards 0.2s;
+}
+
+.hero-iso {
+  margin-bottom:32px;
+  opacity:0; animation:fadeUp 0.8s ease forwards 0.3s;
+}
+
+.hero-title {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(64px,12vw,160px);
+  line-height:0.85; letter-spacing:3px; color:var(--white);
+  margin-bottom:24px;
+  opacity:0; animation:fadeUp 0.8s ease forwards 0.4s;
+}
+
+.hero-tagline {
+  font-size:clamp(14px,2vw,18px); font-weight:200; color:rgba(255,255,255,0.5);
+  line-height:1.7; margin-bottom:64px;
+  opacity:0; animation:fadeUp 0.8s ease forwards 0.6s;
+}
+
+/* TWO PATHS */
+.hero-paths {
+  display:grid; grid-template-columns:1fr 1fr; gap:16px;
+  width:100%; max-width:560px; margin:0 auto;
+  opacity:0; animation:fadeUp 0.8s ease forwards 0.8s;
+}
+
+.path-card {
+  border-radius:16px; padding:28px 24px;
+  text-decoration:none; display:flex; flex-direction:column;
+  align-items:flex-start; gap:12px;
+  transition:transform 0.2s, box-shadow 0.2s;
+  cursor:pointer;
+}
+.path-card:hover { transform:translateY(-3px); }
+
+.path-empresa {
+  background:var(--red);
+}
+.path-empresa:hover { box-shadow:0 16px 48px rgba(204,0,0,0.35); }
+
+.path-embajador {
+  background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.1);
+}
+.path-embajador:hover {
+  background:rgba(255,255,255,0.1);
+  box-shadow:0 16px 48px rgba(0,0,0,0.3);
+}
+
+.path-tag {
+  font-family:'Space Mono',monospace; font-size:8px;
+  letter-spacing:3px; text-transform:uppercase;
+  color:rgba(255,255,255,0.5);
+}
+.path-empresa .path-tag { color:rgba(255,255,255,0.6); }
+
+.path-title {
+  font-family:'Bebas Neue',sans-serif; font-size:28px;
+  letter-spacing:2px; color:var(--white); line-height:1;
+}
+
+.path-sub {
+  font-size:12px; font-weight:300; color:rgba(255,255,255,0.6); line-height:1.5;
+}
+.path-empresa .path-sub { color:rgba(255,255,255,0.8); }
+
+.path-arrow {
+  margin-top:8px; font-size:18px; color:var(--white);
+  opacity:0.5; transition:opacity 0.2s, transform 0.2s;
+}
+.path-card:hover .path-arrow { opacity:1; transform:translateX(4px); }
+
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(20px); }
+  to { opacity:1; transform:translateY(0); }
+}
+
+/* ── SCROLL INDICATOR ── */
+.scroll-hint {
+  position:absolute; bottom:32px; left:50%; transform:translateX(-50%);
+  display:flex; flex-direction:column; align-items:center; gap:8px;
+  opacity:0; animation:fadeUp 1s ease forwards 1.2s;
+}
+.scroll-line { width:1px; height:40px; background:linear-gradient(to bottom, rgba(255,255,255,0.3), transparent); }
+.scroll-label { font-family:'Space Mono',monospace; font-size:8px; letter-spacing:3px; color:rgba(255,255,255,0.2); text-transform:uppercase; }
+
+/* ── SECTION BASE ── */
+.sec { padding:100px 48px; }
+.sec-off { background:var(--off); }
+.sec-white { background:var(--white); }
+.sec-dark { background:var(--charcoal); }
+
+.sec-eyebrow {
+  font-family:'Space Mono',monospace; font-size:9px; letter-spacing:4px;
+  color:var(--red); text-transform:uppercase; margin-bottom:16px; display:block;
+}
+.sec-title {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(40px,6vw,80px);
+  line-height:0.9; letter-spacing:1px; color:var(--black); margin-bottom:48px;
+}
+.sec-dark .sec-title { color:var(--white); }
+.sec-dark .sec-eyebrow { color:var(--red); }
+
+.rline { width:40px; height:2px; background:var(--red); margin-bottom:48px; }
+
+/* ── QUIÉNES SOMOS ── */
+.quienes-wrap { max-width:900px; margin:0 auto; }
+.quienes-grid { display:grid; grid-template-columns:1fr 1fr; gap:2px; margin-top:16px; }
+
+.quienes-text {
+  font-size:clamp(16px,2vw,22px); font-weight:200; color:var(--text-muted);
+  line-height:1.8; max-width:580px;
+}
+.quienes-text strong { color:var(--black); font-weight:600; }
+
+.quienes-stat-wrap {
+  display:flex; flex-direction:column; gap:2px;
+}
+.stat-card {
+  background:var(--off2); padding:32px; display:flex; flex-direction:column; gap:8px;
+}
+.stat-card:first-child { background:var(--red); }
+.stat-num {
+  font-family:'Bebas Neue',sans-serif; font-size:52px; letter-spacing:2px;
+  color:var(--black); line-height:1;
+}
+.stat-card:first-child .stat-num { color:var(--white); }
+.stat-label { font-size:12px; color:var(--text-muted); font-weight:300; }
+.stat-card:first-child .stat-label { color:rgba(255,255,255,0.7); }
+
+/* ── CÓMO FUNCIONA ── */
+.como-tabs {
+  display:flex; gap:2px; margin-bottom:48px;
+}
+.tab-btn {
+  flex:1; padding:16px 24px; background:var(--off2); border:none;
+  font-family:'Bebas Neue',sans-serif; font-size:20px; letter-spacing:2px;
+  color:var(--text-muted); cursor:pointer; transition:all 0.2s; text-align:center;
+}
+.tab-btn.active { background:var(--red); color:var(--white); }
+
+.tab-content { display:none; }
+.tab-content.active { display:block; }
+
+.steps-row { display:grid; grid-template-columns:1fr 1fr 1fr; gap:2px; }
+.step-card { background:var(--white); padding:40px 32px; position:relative; }
+.step-num {
+  font-family:'Bebas Neue',sans-serif; font-size:80px; color:rgba(0,0,0,0.05);
+  line-height:1; margin-bottom:16px;
+}
+.step-icon { font-size:24px; color:var(--red); margin-bottom:16px; }
+.step-title-card {
+  font-family:'Bebas Neue',sans-serif; font-size:22px; letter-spacing:1px;
+  color:var(--black); margin-bottom:8px;
+}
+.step-desc { font-size:13px; color:var(--text-muted); line-height:1.6; font-weight:300; }
+.step-arrow {
+  position:absolute; right:-12px; top:50%; transform:translateY(-50%);
+  width:24px; height:24px; background:var(--red); border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:10px; color:var(--white); z-index:2;
+}
+.step-card:last-child .step-arrow { display:none; }
+
+/* ── POR QUÉ MIRIO ── */
+.diferenciadores { display:grid; grid-template-columns:1fr 1fr 1fr; gap:2px; margin-top:0; }
+.dif-card {
+  padding:48px 40px; background:var(--dark);
+  border-bottom:2px solid transparent; transition:border-color 0.3s;
+}
+.dif-card:hover { border-color:var(--red); }
+.dif-card:first-child { background:var(--red); }
+.dif-num {
+  font-family:'Space Mono',monospace; font-size:10px; letter-spacing:3px;
+  color:rgba(255,255,255,0.2); margin-bottom:32px; display:block;
+}
+.dif-card:first-child .dif-num { color:rgba(255,255,255,0.4); }
+.dif-title {
+  font-family:'Bebas Neue',sans-serif; font-size:32px; letter-spacing:1px;
+  color:var(--white); margin-bottom:16px; line-height:1;
+}
+.dif-text { font-size:13px; color:rgba(255,255,255,0.45); line-height:1.7; font-weight:300; }
+.dif-card:first-child .dif-text { color:rgba(255,255,255,0.8); }
+
+/* ── CTA FINAL ── */
+.cta-section {
+  background:var(--black); padding:100px 48px;
+  text-align:center; position:relative; overflow:hidden;
+}
+.cta-section::before {
+  content:'MIRIO';
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(120px,20vw,280px);
+  color:rgba(255,255,255,0.02);
+  position:absolute; top:50%; left:50%;
+  transform:translate(-50%,-50%);
+  letter-spacing:8px; pointer-events:none; white-space:nowrap;
+}
+.cta-eyebrow {
+  font-family:'Space Mono',monospace; font-size:9px; letter-spacing:4px;
+  color:var(--red); text-transform:uppercase; margin-bottom:24px; display:block;
+}
+.cta-title {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(48px,8vw,100px);
+  line-height:0.9; color:var(--white); margin-bottom:16px; letter-spacing:2px;
+}
+.cta-sub { font-size:15px; font-weight:200; color:rgba(255,255,255,0.4); margin-bottom:56px; }
+
+.cta-paths {
+  display:grid; grid-template-columns:1fr 1fr; gap:16px;
+  max-width:480px; margin:0 auto; position:relative; z-index:2;
+}
+.cta-btn {
+  padding:20px 28px; border-radius:12px; text-decoration:none;
+  font-family:'Bebas Neue',sans-serif; font-size:18px; letter-spacing:2px;
+  transition:all 0.2s; display:flex; align-items:center; justify-content:center; gap:8px;
+}
+.cta-btn-primary { background:var(--red); color:var(--white); }
+.cta-btn-primary:hover { background:var(--red-dark); transform:translateY(-2px); }
+.cta-btn-secondary {
+  background:transparent; color:var(--white);
+  border:1px solid rgba(255,255,255,0.2);
+}
+.cta-btn-secondary:hover { background:rgba(255,255,255,0.05); transform:translateY(-2px); }
+
+/* ── FOOTER ── */
+footer {
+  background:var(--black); border-top:1px solid rgba(255,255,255,0.05);
+  padding:40px 48px; display:flex; align-items:center; justify-content:space-between;
+}
+.footer-logo { font-family:'Bebas Neue',sans-serif; font-size:28px; letter-spacing:4px; color:var(--white); }
+.footer-logo span { color:var(--red); }
+.footer-info { font-family:'Space Mono',monospace; font-size:9px; color:rgba(255,255,255,0.2); letter-spacing:2px; text-align:right; line-height:2; }
+
+/* accent line */
+.accent { height:2px; background:linear-gradient(90deg,var(--red) 0%,transparent 100%); }
+
+/* ── RESPONSIVE ── */
+@media(max-width:768px) {
+  nav { padding:16px 24px; }
+  .nav-links { display:none; }
+  .hero-paths { grid-template-columns:1fr; max-width:340px; }
+  .sec { padding:64px 24px; }
+  .quienes-grid { grid-template-columns:1fr; }
+  .steps-row { grid-template-columns:1fr; }
+  .step-arrow { display:none; }
+  .diferenciadores { grid-template-columns:1fr; }
+  .cta-paths { grid-template-columns:1fr; max-width:340px; }
+  footer { flex-direction:column; gap:24px; text-align:center; }
+  .footer-info { text-align:center; }
+  .como-tabs { flex-direction:column; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="mainNav">
+  <a href="#" class="nav-logo">
+    <svg width="48" height="26" viewBox="0 0 110 60" fill="none">
+      <line x1="5" y1="18" x2="105" y2="18" stroke="#CC0000" stroke-width="4" stroke-linecap="round"/>
+      <line x1="5" y1="42" x2="105" y2="42" stroke="#CC0000" stroke-width="1.5" stroke-linecap="round" opacity="0.4"/>
+      <circle cx="55" cy="30" r="3.5" fill="#CC0000"/>
+    </svg>
+    <span class="nav-name">MIRIO</span>
+  </a>
+  <div class="nav-links">
+    <a href="#quienes" class="nav-link">Quiénes somos</a>
+    <a href="#como" class="nav-link">Cómo funciona</a>
+    <a href="#por-que" class="nav-link">Por qué MIRIO</a>
+  </div>
+  <a href="mirio-onboarding.html" class="nav-cta">Soy una empresa →</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-wm">MIRIO</div>
+
+  <div class="hero-content">
+    <p class="hero-eyebrow">Monterrey, México · 2025</p>
+
+    <div class="hero-iso">
+      <svg width="100" height="64" viewBox="0 0 110 70" fill="none">
+        <line x1="5" y1="22" x2="105" y2="22" stroke="#CC0000" stroke-width="4" stroke-linecap="round"/>
+        <line x1="5" y1="48" x2="105" y2="48" stroke="#CC0000" stroke-width="1.5" stroke-linecap="round" opacity="0.35"/>
+        <circle cx="55" cy="35" r="4" fill="#CC0000"/>
+      </svg>
+    </div>
+
+    <h1 class="hero-title">MIRIO</h1>
+
+    <p class="hero-tagline">Presencia real, no solo números.</p>
+
+    <div class="hero-paths">
+      <a href="mirio-onboarding.html" class="path-card path-empresa">
+        <span class="path-tag">Para negocios</span>
+        <p class="path-title">SOY UNA<br>EMPRESA</p>
+        <p class="path-sub">Quiero crecer mi presencia con embajadores reales en MTY</p>
+        <span class="path-arrow">→</span>
+      </a>
+      <a href="mirio-roster.html" class="path-card path-embajador">
+        <span class="path-tag">Para personas</span>
+        <p class="path-title">QUIERO SER<br>EMBAJADOR</p>
+        <p class="path-sub">Me interesa colaborar con marcas y vivir experiencias únicas</p>
+        <span class="path-arrow">→</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="scroll-hint">
+    <span class="scroll-label">Conoce más</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<div class="accent"></div>
+
+<!-- QUIÉNES SOMOS -->
+<section class="sec sec-off" id="quienes">
+  <div style="max-width:1100px; margin:0 auto;">
+    <span class="sec-eyebrow">01 — Quiénes somos</span>
+    <h2 class="sec-title">AGENCIA<br>BOUTIQUE DE PR</h2>
+    <div style="display:grid; grid-template-columns:3fr 2fr; gap:64px; align-items:start;">
+      <div>
+        <p class="quienes-text">
+          MIRIO es una agencia boutique de PR con <strong>embajadores reales</strong>. Trabajamos con personas auténticas que conectan de verdad con su comunidad. <strong>Cada estrategia es taylor made para tu negocio</strong>.
+        </p>
+        <div style="margin-top:40px; padding-top:40px; border-top:1px solid var(--off2);">
+          <p style="font-family:'Space Mono',monospace; font-size:9px; letter-spacing:3px; color:var(--red); text-transform:uppercase; margin-bottom:12px;">El umbral</p>
+          <p style="font-size:14px; color:var(--text-muted); font-weight:300; line-height:1.8; max-width:440px;">Hay un nivel donde estás. Hay un nivel donde puedes estar. MIRIO existe en ese espacio — el momento exacto del cambio.</p>
+        </div>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:2px;">
+        <div class="stat-card" style="background:var(--red); padding:32px;">
+          <p class="stat-num" style="color:var(--white);">100%</p>
+          <p class="stat-label" style="color:rgba(255,255,255,0.7);">Taylor made — cada estrategia es única</p>
+        </div>
+        <div class="stat-card" style="background:var(--off2); padding:32px;">
+          <p class="stat-num" style="color:var(--black);">MTY</p>
+          <p class="stat-label">Enfocados en el mercado de Monterrey</p>
+        </div>
+        <div class="stat-card" style="background:var(--off2); padding:32px;">
+          <p class="stat-num" style="color:var(--black);">Real</p>
+          <p class="stat-label">Embajadores auténticos, no números vacíos</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CÓMO FUNCIONA -->
+<section class="sec sec-white" id="como">
+  <div style="max-width:1100px; margin:0 auto;">
+    <span class="sec-eyebrow">02 — Cómo funciona</span>
+    <h2 class="sec-title">SIMPLE.<br>DIRECTO.</h2>
+
+    <div class="como-tabs">
+      <button class="tab-btn active" onclick="switchTab('empresa')">Soy una empresa</button>
+      <button class="tab-btn" onclick="switchTab('embajador')">Quiero ser embajador</button>
+    </div>
+
+    <div class="tab-content active" id="tab-empresa">
+      <div class="steps-row">
+        <div class="step-card">
+          <div class="step-num">01</div>
+          <div class="step-icon">✦</div>
+          <p class="step-title-card">NOS CUENTAS TU NEGOCIO</p>
+          <p class="step-desc">Llenas el onboarding — tus objetivos, tu cliente ideal, tu presupuesto. Tarda 5 minutos.</p>
+          <div class="step-arrow">→</div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">02</div>
+          <div class="step-icon">✦</div>
+          <p class="step-title-card">DISEÑAMOS TU ESTRATEGIA</p>
+          <p class="step-desc">En 48 hrs te presentamos un plan taylor made con los embajadores que encajan con tu marca.</p>
+          <div class="step-arrow">→</div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">03</div>
+          <div class="step-icon">✦</div>
+          <p class="step-title-card">ACTIVAMOS EMBAJADORES</p>
+          <p class="step-desc">Arrancamos la campaña. Tú ves resultados reales mientras nosotros lo operamos todo.</p>
+          <div class="step-arrow">→</div>
+        </div>
+      </div>
+      <div style="margin-top:32px; text-align:center;">
+        <a href="mirio-onboarding.html" style="display:inline-flex; align-items:center; gap:10px; padding:16px 32px; background:var(--red); border-radius:12px; font-family:'Bebas Neue',sans-serif; font-size:18px; letter-spacing:2px; color:var(--white); text-decoration:none; transition:background 0.2s;" onmouseover="this.style.background='#990000'" onmouseout="this.style.background='#CC0000'">
+          EMPIEZA AQUÍ →
+        </a>
+      </div>
+    </div>
+
+    <div class="tab-content" id="tab-embajador">
+      <div class="steps-row">
+        <div class="step-card">
+          <div class="step-num">01</div>
+          <div class="step-icon">✦</div>
+          <p class="step-title-card">TE REGISTRAS</p>
+          <p class="step-desc">Llenas tu perfil — quién eres, qué te gusta, en qué zona de MTY te mueves. Rápido y sencillo.</p>
+          <div class="step-arrow">→</div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">02</div>
+          <div class="step-icon">✦</div>
+          <p class="step-title-card">TE HACEMOS MATCH</p>
+          <p class="step-desc">Cuando hay una campaña que encaja con tu perfil, te contactamos directamente por WhatsApp.</p>
+          <div class="step-arrow">→</div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">03</div>
+          <div class="step-icon">✦</div>
+          <p class="step-title-card">PARTICIPAS Y DISFRUTAS</p>
+          <p class="step-desc">Tú decides si te sumas. Vives la experiencia, subes contenido auténtico y obtienes tus beneficios.</p>
+          <div class="step-arrow">→</div>
+        </div>
+      </div>
+      <div style="margin-top:32px; text-align:center;">
+        <a href="mirio-roster.html" style="display:inline-flex; align-items:center; gap:10px; padding:16px 32px; background:var(--black); border-radius:12px; font-family:'Bebas Neue',sans-serif; font-size:18px; letter-spacing:2px; color:var(--white); text-decoration:none; transition:background 0.2s;" onmouseover="this.style.background='#333'" onmouseout="this.style.background='#060606'">
+          ÚNETE AL ROSTER →
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- POR QUÉ MIRIO -->
+<section class="sec sec-dark" id="por-que">
+  <div style="max-width:1100px; margin:0 auto;">
+    <span class="sec-eyebrow">03 — Por qué MIRIO</span>
+    <h2 class="sec-title" style="color:var(--white);">LO QUE NOS<br>HACE DIFERENTES</h2>
+    <div class="diferenciadores">
+      <div class="dif-card">
+        <span class="dif-num">01</span>
+        <p class="dif-title">ESTRATEGIA<br>A LA MEDIDA</p>
+        <p class="dif-text">Nada genérico. Cada plan es diseñado específicamente para tu negocio, tu cliente y tu mercado. Lo que funciona para uno no funciona para todos.</p>
+      </div>
+      <div class="dif-card">
+        <span class="dif-num">02</span>
+        <p class="dif-title">EMBAJADORES<br>REALES</p>
+        <p class="dif-text">Trabajamos con personas auténticas que tienen comunidades que confían en ellos. No bots, no números vacíos — conexiones reales con impacto real.</p>
+      </div>
+      <div class="dif-card">
+        <span class="dif-num">03</span>
+        <p class="dif-title">PRESENCIA<br>QUE SE SIENTE</p>
+        <p class="dif-text">El objetivo no es solo aparecer — es que tu marca se sienta en la ciudad. Que la gente la conozca, la recuerde y quiera ser parte de ella.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="cta-section">
+  <span class="cta-eyebrow">¿Listo para cruzar el umbral?</span>
+  <h2 class="cta-title">DA EL<br>SIGUIENTE PASO</h2>
+  <p class="cta-sub">Hay un nivel donde estás. Hay un nivel donde puedes estar.</p>
+  <div class="cta-paths">
+    <a href="mirio-onboarding.html" class="cta-btn cta-btn-primary">SOY UNA EMPRESA →</a>
+    <a href="mirio-roster.html" class="cta-btn cta-btn-secondary">SER EMBAJADOR →</a>
+  </div>
+</section>
+
+<div class="accent"></div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="nav-logo">
+    <svg width="40" height="22" viewBox="0 0 110 60" fill="none">
+      <line x1="5" y1="18" x2="105" y2="18" stroke="#CC0000" stroke-width="4" stroke-linecap="round"/>
+      <line x1="5" y1="42" x2="105" y2="42" stroke="#CC0000" stroke-width="1.5" stroke-linecap="round" opacity="0.4"/>
+      <circle cx="55" cy="30" r="3.5" fill="#CC0000"/>
+    </svg>
+    <span class="footer-logo"><span>M</span>IRIO</span>
+  </div>
+  <div class="footer-info">
+    <p>@mirio.pr</p>
+    <p>MONTERREY, NUEVO LEÓN, MX</p>
+    <p>© 2025 MIRIO — TODOS LOS DERECHOS RESERVADOS</p>
+  </div>
+</footer>
+
+<script>
+// Nav scroll effect
+window.addEventListener('scroll', () => {
+  document.getElementById('mainNav').classList.toggle('scrolled', window.scrollY > 50);
+});
+
+// Tab switcher
+function switchTab(tab) {
+  document.querySelectorAll('.tab-btn').forEach((btn, i) => {
+    btn.classList.toggle('active', (i === 0 && tab === 'empresa') || (i === 1 && tab === 'embajador'));
+  });
+  document.getElementById('tab-empresa').classList.toggle('active', tab === 'empresa');
+  document.getElementById('tab-embajador').classList.toggle('active', tab === 'embajador');
+}
+
+// Fade in on scroll
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.style.opacity = '1';
+      e.target.style.transform = 'translateY(0)';
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.step-card, .dif-card, .stat-card').forEach(el => {
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(20px)';
+  el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+  observer.observe(el);
+});
+</script>
+</body>
+</html>
