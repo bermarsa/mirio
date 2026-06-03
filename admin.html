@@ -86,9 +86,9 @@ body { background:var(--charcoal);  color:var(--white); font-family:'Outfit',san
 
 /* ── SIDEBAR ── */
 .sidebar {
-  width:var(--sidebar-w); background:var(--black);
+  width:var(--sidebar-w); background:#0E0E10;
   display:flex; flex-direction:column;
-  border-right:1px solid rgba(255,255,255,0.05);
+  border-right:1px solid rgba(255,255,255,0.06);
   flex-shrink:0;
 }
 
@@ -114,7 +114,7 @@ body { background:var(--charcoal);  color:var(--white); font-family:'Outfit',san
 .sidebar-user-name { font-size:13px; color:var(--white); font-weight:500; }
 .sidebar-user-role {
   font-family:'Space Mono',monospace; font-size:9px;
-  color:var(--red); letter-spacing:1px;
+  color:rgba(255,255,255,0.35); letter-spacing:1px;
 }
 
 .sidebar-nav { flex:1; padding:16px 0; }
@@ -132,15 +132,19 @@ body { background:var(--charcoal);  color:var(--white); font-family:'Outfit',san
 }
 .nav-item:hover { background:rgba(255,255,255,0.04); color:var(--white); }
 .nav-item.active {
-  background:rgba(204,0,0,0.08);
-  border-left-color:var(--red);
+  background:rgba(255,255,255,0.05);
+  border-left-color:rgba(204,0,0,0.7);
   color:var(--white);
 }
 .nav-item-icon { font-size:14px; width:18px; text-align:center; }
 .nav-badge {
-  margin-left:auto; background:var(--red); color:var(--white);
+  margin-left:auto; background:rgba(255,255,255,0.08); color:rgba(255,255,255,0.3);
   font-family:'Space Mono',monospace; font-size:9px;
   padding:2px 7px; border-radius:100px;
+  transition: all 0.3s;
+}
+.nav-badge.has-data {
+  background:rgba(204,0,0,0.7); color:rgba(255,255,255,0.9);
 }
 
 .sidebar-bottom {
@@ -247,10 +251,23 @@ body { background:var(--charcoal);  color:var(--white); font-family:'Outfit',san
 .filter-chip:hover { border-color:var(--red); color:var(--red); }
 .filter-chip.active { background:var(--red); border-color:var(--red); color:var(--white); }
 
+.filter-toggle-btn {
+  padding:7px 16px; background:#FFFFFF; border:1px solid #D5D2CB;
+  border-radius:100px; font-size:12px; color:#444; cursor:pointer;
+  font-family:'Outfit',sans-serif; transition:all 0.15s;
+  display:flex; align-items:center; gap:8px; font-weight:500;
+}
+.filter-toggle-btn:hover { border-color:var(--red); color:var(--red); }
+.filter-toggle-btn.open { border-color:var(--red); color:var(--red); background:#FFF5F5; }
+.filter-active-count {
+  background:var(--red); color:#FFF; border-radius:100px;
+  font-size:10px; padding:1px 7px; font-weight:600;
+}
 .adv-filters {
   background:#FFFFFF; border-radius:12px; padding:16px 20px;
   border:1px solid #E0DDD6; margin-bottom:16px;
-  display:flex; flex-direction:column; gap:12px;
+  flex-direction:column; gap:12px;
+  animation:slideIn 0.2s ease;
 }
 .adv-filter-group { display:flex; align-items:flex-start; gap:12px; }
 .adv-filter-label {
@@ -486,6 +503,14 @@ body { background:var(--charcoal);  color:var(--white); font-family:'Outfit',san
   cursor:pointer; margin-top:16px; transition:background 0.2s;
 }
 .save-btn:hover { background:var(--red-dark); }
+.crm-toolbar {
+  display:flex; align-items:center; justify-content:space-between;
+  margin-bottom:16px; gap:12px;
+}
+.crm-toolbar-left { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+.crm-toolbar-right { display:flex; gap:6px; flex-shrink:0; }
+.toolbar-divider { width:1px; height:20px; background:#D5D2CB; }
+
 .view-toggle {
   padding:6px 14px; border:1px solid #D5D2CB; border-radius:8px;
   font-size:11px; color:#888; cursor:pointer; background:#FFFFFF;
@@ -697,12 +722,28 @@ body { background:var(--charcoal);  color:var(--white); font-family:'Outfit',san
 
       <!-- EMBAJADORES -->
       <div class="view-panel" id="view-embajadores">
-        <div style="display:flex;justify-content:flex-end;margin-bottom:12px;gap:6px;">
-          <button class="view-toggle active" id="emb-grid-btn" onclick="setEmbView('grid')">⊞ Tarjetas</button>
-          <button class="view-toggle" id="emb-list-btn" onclick="setEmbView('list')">≡ Lista</button>
+        <!-- TOOLBAR -->
+        <div class="crm-toolbar">
+          <div class="crm-toolbar-left">
+            <button class="filter-toggle-btn" id="filterToggleBtn" onclick="toggleFilters()">
+              <span id="filterBtnText">⊕ Filtros</span>
+              <span class="filter-active-count" id="filterActiveCount" style="display:none;"></span>
+            </button>
+            <div class="toolbar-divider"></div>
+            <div id="embajador-filters" style="display:flex;gap:6px;align-items:center;">
+              <button class="filter-chip active" onclick="filterByStatus('all','embajador')">Todos</button>
+              <button class="filter-chip" onclick="filterByStatus('Nuevo','embajador')">Nuevos</button>
+              <button class="filter-chip" onclick="filterByStatus('Activo','embajador')">Activos</button>
+              <button class="filter-chip" onclick="filterByStatus('En campaña','embajador')">En campaña</button>
+              <button class="filter-chip" onclick="filterByStatus('Pausado','embajador')">Pausados</button>
+            </div>
+          </div>
+          <div class="crm-toolbar-right">
+            <button class="view-toggle active" id="emb-grid-btn" onclick="setEmbView('grid')">⊞ Tarjetas</button>
+            <button class="view-toggle" id="emb-list-btn" onclick="setEmbView('list')">≡ Lista</button>
+          </div>
         </div>
-        <!-- ADVANCED FILTERS -->
-        <div class="adv-filters" id="advFilters">
+        <div class="adv-filters" id="advFilters" style="display:none;">
           <div class="adv-filter-group">
             <span class="adv-filter-label">Zona MTY</span>
             <div class="adv-chips" id="filter-zona">
@@ -773,13 +814,7 @@ body { background:var(--charcoal);  color:var(--white); font-family:'Outfit',san
             <button class="clear-filters-btn" onclick="clearEmbajadorFilters()">✕ Limpiar filtros</button>
           </div>
         </div>
-        <div class="filter-bar" id="embajador-filters">
-          <button class="filter-chip active" onclick="filterByStatus('all','embajador')">Todos</button>
-          <button class="filter-chip" onclick="filterByStatus('Nuevo','embajador')">Nuevos</button>
-          <button class="filter-chip" onclick="filterByStatus('Activo','embajador')">Activos</button>
-          <button class="filter-chip" onclick="filterByStatus('En campaña','embajador')">En campaña</button>
-          <button class="filter-chip" onclick="filterByStatus('Pausado','embajador')">Pausados</button>
-        </div>
+
         <div class="cards-grid" id="embajadores-grid"></div>
       </div>
 
@@ -926,8 +961,14 @@ function renderStats() {
   document.getElementById('stat-embajadores').textContent = allEmbajadores.length;
   document.getElementById('stat-activos').textContent = allEmpresas.filter(e => e.fields['Estado'] === 'Cliente activo').length;
   document.getElementById('stat-nuevos').textContent = allEmpresas.filter(e => !e.fields['Estado'] || e.fields['Estado'] === 'Nuevo').length;
-  document.getElementById('badge-empresas').textContent = allEmpresas.length;
-  document.getElementById('badge-embajadores').textContent = allEmbajadores.length;
+  
+  const bEmp = document.getElementById('badge-empresas');
+  bEmp.textContent = allEmpresas.length;
+  bEmp.classList.toggle('has-data', allEmpresas.length > 0);
+  
+  const bEmb = document.getElementById('badge-embajadores');
+  bEmb.textContent = allEmbajadores.length;
+  bEmb.classList.toggle('has-data', allEmbajadores.length > 0);
 }
 
 // ── DASHBOARD ──
@@ -1244,10 +1285,34 @@ async function deleteRecord(type, id) {
   renderDashboard();
 }
 
+function toggleFilters() {
+  const panel = document.getElementById('advFilters');
+  const btn = document.getElementById('filterToggleBtn');
+  const isOpen = panel.style.display === 'flex';
+  panel.style.display = isOpen ? 'none' : 'flex';
+  btn.classList.toggle('open', !isOpen);
+  document.getElementById('filterBtnText').textContent = isOpen ? '⊕ Filtros' : '⊖ Filtros';
+}
+
+function updateFilterCount() {
+  const count = document.querySelectorAll('.adv-chip.selected').length;
+  const badge = document.getElementById('filterActiveCount');
+  const btn = document.getElementById('filterToggleBtn');
+  if (count > 0) {
+    badge.style.display = 'inline';
+    badge.textContent = count;
+    btn.classList.add('open');
+  } else {
+    badge.style.display = 'none';
+    btn.classList.remove('open');
+  }
+}
+
 function initAdvFilters() {
   document.querySelectorAll('.adv-chip').forEach(chip => {
     chip.addEventListener('click', () => {
       chip.classList.toggle('selected');
+      updateFilterCount();
       applyEmbajadorFilters();
     });
   });
@@ -1265,6 +1330,7 @@ function applyEmbajadorFilters() {
 
 function clearEmbajadorFilters() {
   document.querySelectorAll('.adv-chip').forEach(c => c.classList.remove('selected'));
+  updateFilterCount();
   applyEmbajadorFilters();
 }
 
