@@ -9,12 +9,12 @@
 :root {
   --red: #CC0000;
   --red-dark: #990000;
-  --black: #060606;
-  --charcoal: #111111;
-  --dark: #181818;
-  --gray: #2A2A2A;
-  --mid: #555;
-  --light: #999;
+  --black: #141416;
+  --charcoal: #1C1C1E;
+  --dark: #242426;
+  --gray: #3A3A3C;
+  --mid: #6E6E73;
+  --light: #AEAEB2;
   --off: #F0EEE9;
   --off2: #E8E5DE;
   --white: #FFFFFF;
@@ -23,7 +23,7 @@
 }
 
 * { margin:0; padding:0; box-sizing:border-box; }
-body { background:var(--charcoal); color:var(--white); font-family:'Outfit',sans-serif; overflow-x:hidden; }
+body { background:var(--charcoal);  color:var(--white); font-family:'Outfit',sans-serif; overflow-x:hidden; }
 
 /* ── LOGIN ── */
 .login-screen {
@@ -246,6 +246,14 @@ body { background:var(--charcoal); color:var(--white); font-family:'Outfit',sans
 .filter-chip:hover { border-color:var(--red); color:var(--red); }
 .filter-chip.active { background:var(--red); border-color:var(--red); color:var(--white); }
 
+.filter-select {
+  padding:7px 14px; border:1px solid var(--gray); border-radius:100px;
+  font-size:12px; color:var(--light); cursor:pointer;
+  background:var(--dark); font-family:'Outfit',sans-serif;
+  outline:none; transition:all 0.15s;
+}
+.filter-select:focus { border-color:var(--red); color:var(--white); }
+
 /* ── CARDS GRID ── */
 .cards-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:12px; }
 
@@ -457,6 +465,41 @@ body { background:var(--charcoal); color:var(--white); font-family:'Outfit',sans
   cursor:pointer; margin-top:16px; transition:background 0.2s;
 }
 .save-btn:hover { background:var(--red-dark); }
+.view-toggle {
+  padding:6px 14px; border:1px solid var(--gray); border-radius:8px;
+  font-size:11px; color:var(--light); cursor:pointer; background:transparent;
+  font-family:'Outfit',sans-serif; transition:all 0.15s;
+}
+.view-toggle:hover { border-color:var(--red); color:var(--red); }
+.view-toggle.active { background:var(--gray); color:var(--white); border-color:var(--gray); }
+
+/* List view styles */
+.cards-list { display:flex; flex-direction:column; gap:2px; }
+.list-row {
+  background:var(--dark); border-radius:10px; padding:14px 20px;
+  display:grid; grid-template-columns:2fr 1fr 1fr 1fr auto;
+  align-items:center; gap:16px; cursor:pointer;
+  transition:background 0.15s; border:1px solid rgba(255,255,255,0.04);
+}
+.list-row:hover { background:#2A2A2C; border-color:rgba(204,0,0,0.2); }
+.list-name { font-size:14px; font-weight:500; color:var(--white); }
+.list-sub { font-size:11px; color:var(--mid); margin-top:2px; }
+.list-cell { font-size:12px; color:var(--light); }
+.list-header {
+  padding:8px 20px; display:grid;
+  grid-template-columns:2fr 1fr 1fr 1fr auto;
+  gap:16px; margin-bottom:4px;
+}
+.list-header-cell { font-family:'Space Mono',monospace; font-size:8px; letter-spacing:2px; color:var(--mid); text-transform:uppercase; }
+
+.delete-btn {
+  width:100%; padding:12px; background:transparent;
+  border:1px solid rgba(255,50,50,0.3); border-radius:10px;
+  font-family:'Space Mono',monospace; font-size:10px; letter-spacing:2px;
+  color:rgba(255,100,100,0.6); cursor:pointer; margin-top:8px;
+  transition:all 0.2s; text-transform:uppercase;
+}
+.delete-btn:hover { background:rgba(255,0,0,0.1); border-color:rgba(255,50,50,0.6); color:rgba(255,100,100,1); }
 
 /* ── LOADING ── */
 .loading-state {
@@ -617,6 +660,10 @@ body { background:var(--charcoal); color:var(--white); font-family:'Outfit',sans
 
       <!-- EMPRESAS -->
       <div class="view-panel" id="view-empresas">
+        <div style="display:flex;justify-content:flex-end;margin-bottom:12px;gap:6px;">
+          <button class="view-toggle active" id="emp-grid-btn" onclick="setEmpView('grid')">⊞ Tarjetas</button>
+          <button class="view-toggle" id="emp-list-btn" onclick="setEmpView('list')">≡ Lista</button>
+        </div>
         <div class="filter-bar" id="empresa-filters">
           <button class="filter-chip active" onclick="filterByStatus('all','empresa')">Todos</button>
           <button class="filter-chip" onclick="filterByStatus('Nuevo','empresa')">Nuevos</button>
@@ -629,6 +676,51 @@ body { background:var(--charcoal); color:var(--white); font-family:'Outfit',sans
 
       <!-- EMBAJADORES -->
       <div class="view-panel" id="view-embajadores">
+        <div style="display:flex;justify-content:flex-end;margin-bottom:12px;gap:6px;">
+          <button class="view-toggle active" id="emb-grid-btn" onclick="setEmbView('grid')">⊞ Tarjetas</button>
+          <button class="view-toggle" id="emb-list-btn" onclick="setEmbView('list')">≡ Lista</button>
+        </div>
+        <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;align-items:center;">
+          <select class="filter-select" id="filter-zona" onchange="applyEmbajadorFilters()">
+            <option value="">Zona MTY</option>
+            <option>San Pedro / Valle</option>
+            <option>MTY Centro</option>
+            <option>Cumbres</option>
+            <option>Contry</option>
+            <option>Del Valle / Obispado</option>
+            <option>Mitras / Roma</option>
+            <option>Santa Catarina</option>
+            <option>Apodaca / Escobedo</option>
+            <option>Guadalupe / Juárez</option>
+            <option>Toda la ZMM</option>
+          </select>
+          <select class="filter-select" id="filter-nse" onchange="applyEmbajadorFilters()">
+            <option value="">NSE</option>
+            <option>A/B · Alto</option>
+            <option>C+ · Medio alto</option>
+            <option>C · Clase media</option>
+            <option>D+ · Emergente</option>
+          </select>
+          <select class="filter-select" id="filter-seguidores" onchange="applyEmbajadorFilters()">
+            <option value="">Seguidores</option>
+            <option>500 – 1.5K</option>
+            <option>1.5K – 3K</option>
+            <option>3K – 5K</option>
+            <option>5K – 10K</option>
+            <option>10K – 20K</option>
+            <option>20K – 50K</option>
+            <option>50K – 100K</option>
+            <option>100K – 500K</option>
+            <option>500K+</option>
+          </select>
+          <select class="filter-select" id="filter-genero" onchange="applyEmbajadorFilters()">
+            <option value="">Género</option>
+            <option>Hombre</option>
+            <option>Mujer</option>
+            <option>Otro</option>
+          </select>
+          <button class="filter-chip" onclick="clearEmbajadorFilters()" style="font-size:11px;padding:6px 12px;">✕ Limpiar</button>
+        </div>
         <div class="filter-bar" id="embajador-filters">
           <button class="filter-chip active" onclick="filterByStatus('all','embajador')">Todos</button>
           <button class="filter-chip" onclick="filterByStatus('Nuevo','embajador')">Nuevos</button>
@@ -826,13 +918,35 @@ function renderEmpresas(records) {
     grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><div class="empty-icon">✦</div><p class="empty-text">No hay empresas registradas aún</p></div>`;
     return;
   }
+  if (empView === 'list') {
+    grid.className = 'cards-list';
+    grid.innerHTML = `
+      <div class="list-header">
+        <div class="list-header-cell">Empresa</div>
+        <div class="list-header-cell">Giro</div>
+        <div class="list-header-cell">Zona</div>
+        <div class="list-header-cell">Objetivo</div>
+        <div class="list-header-cell">Estado</div>
+      </div>` +
+    records.map(r => {
+      const f = r.fields;
+      return `<div class="list-row" onclick="openEmpresaModal('${r.id}')">
+        <div><p class="list-name">${f['Name']||'Sin nombre'}</p><p class="list-sub">${f['Contacto']||''} ${f['Email']?'· '+f['Email']:''}</p></div>
+        <div class="list-cell">${(f['Giro']||'—').split(',')[0]}</div>
+        <div class="list-cell">${(f['Zonas MTY']||'—').split(',')[0]}</div>
+        <div class="list-cell">${f['Objetivo principal']||f['Objetivos']||'—'}</div>
+        <span class="status-badge ${getStatusClass(f['Estado'])}">${f['Estado']||'Nuevo'}</span>
+      </div>`;
+    }).join('');
+    return;
+  }
+  grid.className = 'cards-grid';
   grid.innerHTML = records.map(r => {
     const f = r.fields;
     const initial = (f['Name']||'?')[0].toUpperCase();
     return `
     <div class="empresa-card" onclick="openEmpresaModal('${r.id}')">
       <div class="empresa-card-header">
-        <div class="empresa-avatar">${initial}</div>
         <div class="empresa-info">
           <p class="empresa-name">${f['Name']||'Sin nombre'}</p>
           <p class="empresa-contact">${f['Contacto']||''} ${f['WhatsApp'] ? '· '+f['WhatsApp'] : ''}</p>
@@ -911,6 +1025,7 @@ function openEmpresaModal(id) {
         <option ${f['Estado']==='Cliente activo'?'selected':''}>Cliente activo</option>
         <option ${f['Estado']==='Descartado'?'selected':''}>Descartado</option>
       </select>
+      <button class="delete-btn" onclick="deleteRecord('empresa','${id}')">✕ Eliminar registro</button>
     </div>`;
 
   document.getElementById('modalEmpresa').classList.add('open');
@@ -935,6 +1050,30 @@ function renderEmbajadores(records) {
     grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><div class="empty-icon">◈</div><p class="empty-text">No hay embajadores registrados aún</p></div>`;
     return;
   }
+  if (embView === 'list') {
+    grid.className = 'cards-list';
+    grid.innerHTML = `
+      <div class="list-header">
+        <div class="list-header-cell">Embajador</div>
+        <div class="list-header-cell">Seguidores</div>
+        <div class="list-header-cell">Zona</div>
+        <div class="list-header-cell">Intereses</div>
+        <div class="list-header-cell">Estado</div>
+      </div>` +
+    records.map(r => {
+      const f = r.fields;
+      const ints = [f['Intereses deporte'],f['Intereses vida'],f['Intereses cultura']].filter(Boolean).join(', ').split(',').slice(0,3).map(i=>i.trim()).join(', ');
+      return `<div class="list-row" onclick="openEmbajadorModal('${r.id}')">
+        <div><p class="list-name">${f['Name']||'Sin nombre'}</p><p class="list-sub" style="color:var(--red);font-family:'Space Mono',monospace;font-size:10px;">${f['Instagram']||'—'}</p></div>
+        <div class="list-cell" style="font-family:'Bebas Neue',sans-serif;font-size:18px;">${f['Seguidores']||'—'}</div>
+        <div class="list-cell">${(f['Zona MTY']||'—').split(',')[0]}</div>
+        <div class="list-cell">${ints||'—'}</div>
+        <span class="status-badge ${getEmbajadorStatusClass(f['Estado'])}">${f['Estado']||'Nuevo'}</span>
+      </div>`;
+    }).join('');
+    return;
+  }
+  grid.className = 'cards-grid';
   grid.innerHTML = records.map(r => {
     const f = r.fields;
     const initial = (f['Name']||'?')[0].toUpperCase();
@@ -943,7 +1082,6 @@ function renderEmbajadores(records) {
     return `
     <div class="embajador-card" onclick="openEmbajadorModal('${r.id}')">
       <div class="embajador-card-header">
-        <div class="embajador-avatar">${initial}</div>
         <div class="embajador-info">
           <p class="embajador-name">${f['Name']||'Sin nombre'}</p>
           <p class="embajador-ig">${f['Instagram']||'—'}</p>
@@ -1027,9 +1165,42 @@ function openEmbajadorModal(id) {
         <option ${f['Estado']==='Pausado'?'selected':''}>Pausado</option>
         <option ${f['Estado']==='Descartado'?'selected':''}>Descartado</option>
       </select>
+      <button class="delete-btn" onclick="deleteRecord('embajador','${id}')">✕ Eliminar registro</button>
     </div>`;
 
   document.getElementById('modalEmbajador').classList.add('open');
+}
+
+async function deleteRecord(type, id) {
+  if (!confirm('¿Seguro que quieres eliminar este registro? Esta acción no se puede deshacer.')) return;
+  const tableId = type === 'empresa' ? TABLE_EMPRESAS : TABLE_EMBAJADORES;
+  await fetch(`https://api.airtable.com/v0/${BASE_ID}/${tableId}/${id}`, {
+    method: 'DELETE',
+    headers: { 'Authorization': `Bearer ${AT_TOKEN}` }
+  });
+  if (type === 'empresa') {
+    allEmpresas = allEmpresas.filter(e => e.id !== id);
+    document.getElementById('modalEmpresa').classList.remove('open');
+    renderEmpresas(getFilteredEmpresas());
+  } else {
+    allEmbajadores = allEmbajadores.filter(e => e.id !== id);
+    document.getElementById('modalEmbajador').classList.remove('open');
+    renderEmbajadores(getFilteredEmbajadores());
+  }
+  renderStats();
+  renderDashboard();
+}
+
+function applyEmbajadorFilters() {
+  renderEmbajadores(getFilteredEmbajadores());
+}
+
+function clearEmbajadorFilters() {
+  document.getElementById('filter-zona').value = '';
+  document.getElementById('filter-nse').value = '';
+  document.getElementById('filter-seguidores').value = '';
+  document.getElementById('filter-genero').value = '';
+  applyEmbajadorFilters();
 }
 
 async function updateEmbajadorStatus(id, status) {
@@ -1070,11 +1241,20 @@ function getFilteredEmpresas() {
 
 function getFilteredEmbajadores() {
   const search = document.getElementById('searchInput').value.toLowerCase();
+  const zona = document.getElementById('filter-zona') ? document.getElementById('filter-zona').value : '';
+  const nse = document.getElementById('filter-nse') ? document.getElementById('filter-nse').value : '';
+  const seguidores = document.getElementById('filter-seguidores') ? document.getElementById('filter-seguidores').value : '';
+  const genero = document.getElementById('filter-genero') ? document.getElementById('filter-genero').value : '';
+  
   return allEmbajadores.filter(r => {
     const f = r.fields;
     const matchStatus = currentEmbajadorFilter === 'all' || f['Estado'] === currentEmbajadorFilter || (!f['Estado'] && currentEmbajadorFilter === 'Nuevo');
     const matchSearch = !search || Object.values(f).some(v => v && String(v).toLowerCase().includes(search));
-    return matchStatus && matchSearch;
+    const matchZona = !zona || (f['Zona MTY'] && f['Zona MTY'].includes(zona));
+    const matchNse = !nse || (f['NSE'] && f['NSE'].includes(nse.split(' ')[0]));
+    const matchSeg = !seguidores || f['Seguidores'] === seguidores;
+    const matchGen = !genero || (f['Género'] && f['Género'].includes(genero));
+    return matchStatus && matchSearch && matchZona && matchNse && matchSeg && matchGen;
   });
 }
 
@@ -1082,6 +1262,23 @@ function filterCards() {
   const activeView = document.querySelector('.view-panel.active').id;
   if (activeView === 'view-empresas') renderEmpresas(getFilteredEmpresas());
   else if (activeView === 'view-embajadores') renderEmbajadores(getFilteredEmbajadores());
+}
+
+let empView = 'grid';
+let embView = 'grid';
+
+function setEmpView(v) {
+  empView = v;
+  document.getElementById('emp-grid-btn').classList.toggle('active', v==='grid');
+  document.getElementById('emp-list-btn').classList.toggle('active', v==='list');
+  renderEmpresas(getFilteredEmpresas());
+}
+
+function setEmbView(v) {
+  embView = v;
+  document.getElementById('emb-grid-btn').classList.toggle('active', v==='grid');
+  document.getElementById('emb-list-btn').classList.toggle('active', v==='list');
+  renderEmbajadores(getFilteredEmbajadores());
 }
 
 // ── MODAL ──
