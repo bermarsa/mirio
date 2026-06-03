@@ -192,7 +192,7 @@ body { background:var(--charcoal);  color:var(--white); font-family:'Outfit',san
   transition:border-color 0.2s;
 }
 .search-input:focus { border-color:var(--red); }
-.search-input::placeholder { color:#BBB; }
+.search-input::placeholder { color:#6E6E73; }
 .search-icon {
   position:absolute; left:12px; top:50%;
   transform:translateY(-50%); color:var(--mid); font-size:12px;
@@ -208,7 +208,7 @@ body { background:var(--charcoal);  color:var(--white); font-family:'Outfit',san
 .btn-refresh:hover { border-color:var(--red); color:var(--red); }
 
 /* ── CONTENT ── */
-.content { flex:1; overflow-y:auto; padding:28px 32px; }
+.content { flex:1; overflow-y:auto; padding:28px 32px; background:#F0EEE9; }
 
 /* ── STATS ROW ── */
 .stats-row { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:28px; }
@@ -227,7 +227,7 @@ body { background:var(--charcoal);  color:var(--white); font-family:'Outfit',san
 .stat-card:first-child .stat-label { color:rgba(255,255,255,0.6); }
 .stat-num {
   font-family:'Bebas Neue',sans-serif; font-size:40px;
-  letter-spacing:1px; color:#060606; line-height:1;
+  letter-spacing:1px; color:#1A1A1A; line-height:1;
 }
 .stat-trend {
   font-size:11px; color:#AAA;
@@ -330,15 +330,24 @@ body { background:var(--charcoal);  color:var(--white); font-family:'Outfit',san
 .empresa-status { flex-shrink:0; }
 
 .status-badge {
-  font-family:'Space Mono',monospace; font-size:8px;
-  letter-spacing:1px; text-transform:uppercase;
-  padding:3px 9px; border-radius:100px;
+  font-family:'Outfit',sans-serif; font-size:11px; font-weight:500;
+  letter-spacing:0.3px; text-transform:none;
+  padding:4px 12px 4px 8px; border-radius:100px;
+  display:inline-flex; align-items:center; gap:6px;
 }
-.status-nuevo { background:rgba(255,255,255,0.08); color:var(--light); }
-.status-proceso { background:rgba(204,204,0,0.15); color:#CCCC00; }
-.status-propuesta { background:rgba(0,120,255,0.15); color:#4499FF; }
-.status-activo { background:rgba(0,180,80,0.15); color:#00CC55; }
-.status-descartado { background:rgba(255,0,0,0.1); color:rgba(255,100,100,0.8); }
+.status-badge::before {
+  content:''; width:6px; height:6px; border-radius:50%; flex-shrink:0;
+}
+.status-nuevo { background:#F0F0F0; color:#666; border:1px solid #E0E0E0; }
+.status-nuevo::before { background:#BBBBBB; }
+.status-proceso { background:#FFFBEA; color:#92700A; border:1px solid #F0E080; }
+.status-proceso::before { background:#F0C000; }
+.status-propuesta { background:#EEF4FF; color:#2255BB; border:1px solid #BBCFF0; }
+.status-propuesta::before { background:#4488EE; }
+.status-activo { background:#EDFAF2; color:#1A7A3C; border:1px solid #A8E0BC; }
+.status-activo::before { background:#22BB66; }
+.status-descartado { background:#FFF0F0; color:#BB3333; border:1px solid #FFBBBB; }
+.status-descartado::before { background:#CC4444; }
 
 .empresa-card-body { padding:0 20px 16px; }
 .empresa-meta {
@@ -417,79 +426,105 @@ body { background:var(--charcoal);  color:var(--white); font-family:'Outfit',san
 
 /* ── MODAL ── */
 .modal-overlay {
-  position:fixed; inset:0; background:rgba(0,0,0,0.8);
-  z-index:500; display:none; align-items:flex-start; justify-content:flex-end;
-  backdrop-filter:blur(4px);
+  position:fixed; inset:0; background:rgba(0,0,0,0.6);
+  z-index:500; display:none; align-items:center; justify-content:center;
+  backdrop-filter:blur(6px); padding:24px;
 }
 .modal-overlay.open { display:flex; }
 
 .modal-panel {
-  width:520px; height:100vh; background:var(--black);
-  overflow-y:auto; animation:slideInRight 0.3s cubic-bezier(0.4,0,0.2,1);
-  border-left:1px solid rgba(255,255,255,0.06);
+  width:100%; max-width:900px; max-height:92vh; background:#F0EEE9;
+  overflow-y:auto; border-radius:16px;
+  animation:modalIn 0.25s cubic-bezier(0.4,0,0.2,1);
+  border:1px solid rgba(255,255,255,0.08);
+  box-shadow:0 24px 80px rgba(0,0,0,0.6);
 }
-@keyframes slideInRight {
-  from { transform:translateX(100%); opacity:0; }
-  to { transform:translateX(0); opacity:1; }
+@keyframes modalIn {
+  from { opacity:0; transform:scale(0.96) translateY(12px); }
+  to { opacity:1; transform:scale(1) translateY(0); }
 }
 
 .modal-header {
-  padding:24px 28px;
-  border-bottom:1px solid rgba(255,255,255,0.06);
+  padding:20px 28px;
+  border-bottom:1px solid #E0DDD6;
   display:flex; align-items:center; gap:16px; position:sticky; top:0;
-  background:var(--black); z-index:2;
+  background:#F0EEE9; z-index:2; border-radius:16px 16px 0 0;
 }
 .modal-close {
   width:32px; height:32px; border-radius:8px;
-  background:var(--gray); border:none; color:var(--light);
+  background:#E0DDD6; border:none; color:#666;
   cursor:pointer; display:flex; align-items:center; justify-content:center;
   font-size:16px; transition:all 0.15s; flex-shrink:0;
 }
 .modal-close:hover { background:var(--red); color:var(--white); }
-.modal-title { font-family:'Bebas Neue',sans-serif; font-size:24px; letter-spacing:2px; flex:1; }
-.modal-body { padding:28px; }
+.modal-title { font-family:'Bebas Neue',sans-serif; font-size:24px; letter-spacing:2px; flex:1; color:#060606; }
+.modal-body { padding:24px 28px 28px; }
 
-.detail-section { margin-bottom:28px; }
+.detail-section { margin-bottom:20px; }
 .detail-section-title {
-  font-family:'Space Mono',monospace; font-size:8px;
+  font-family:'Bebas Neue',sans-serif; font-size:13px;
   letter-spacing:3px; color:var(--red); text-transform:uppercase;
-  margin-bottom:14px; display:flex; align-items:center; gap:8px;
+  margin-bottom:12px; display:flex; align-items:center; gap:10px;
 }
 .detail-section-title::after {
-  content:''; flex:1; height:1px; background:rgba(255,255,255,0.06);
+  content:''; flex:1; height:1px; background:#E0DDD6;
 }
 
-.detail-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:10px; }
+.detail-row { display:grid; grid-template-columns:1fr 1fr; gap:8px 12px; margin-bottom:8px; }
 .detail-field { }
 .detail-field-label {
-  font-size:10px; color:var(--mid); font-weight:300;
-  margin-bottom:4px; display:block;
+  font-size:9px; color:#999; font-weight:300;
+  margin-bottom:2px; display:block; letter-spacing:0.5px;
 }
 .detail-field-value {
-  font-size:13px; color:var(--white); font-weight:400;
-  line-height:1.5; word-break:break-word;
+  font-size:13px; color:#1A1A1A; font-weight:400;
+  line-height:1.4; word-break:break-word;
 }
-.detail-field-value.empty { color:var(--mid); font-style:italic; }
+.detail-field-value.empty { color:#CCC; font-style:italic; }
 
 .detail-tags { display:flex; flex-wrap:wrap; gap:6px; margin-top:6px; }
 .detail-tag {
-  font-size:11px; color:var(--light);
-  background:rgba(255,255,255,0.06); padding:4px 12px;
-  border-radius:100px; border:1px solid rgba(255,255,255,0.08);
+  font-size:11px; color:#555;
+  background:#FFFFFF; padding:4px 12px;
+  border-radius:100px; border:1px solid #D5D2CB;
 }
 
-.status-select {
-  width:100%; background:var(--dark); border:1px solid var(--gray);
-  border-radius:8px; padding:10px 14px; color:var(--white);
-  font-family:'Outfit',sans-serif; font-size:13px;
-  outline:none; cursor:pointer; margin-top:8px;
-  transition:border-color 0.2s;
+.status-select { display:none; } /* hidden, using custom UI */
+
+.status-picker { display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
+.status-pill {
+  padding:6px 14px 6px 10px; border-radius:100px; cursor:pointer;
+  font-family:'Outfit',sans-serif; font-size:12px; font-weight:500;
+  display:inline-flex; align-items:center; gap:6px;
+  transition:all 0.15s; border:1.5px solid transparent; opacity:0.5;
 }
-.status-select:focus { border-color:var(--red); }
+.status-pill::before { content:''; width:7px; height:7px; border-radius:50%; flex-shrink:0; }
+.status-pill.active { opacity:1; }
+.status-pill.active { box-shadow:0 2px 8px rgba(0,0,0,0.12); }
+
+.sp-nuevo { background:#F0F0F0; color:#666; border-color:#DDD; }
+.sp-nuevo::before { background:#BBB; }
+.sp-nuevo.active { background:#EBEBEB; border-color:#6E6E73; }
+
+.sp-proceso { background:#FFFBEA; color:#92700A; border-color:#F0E080; }
+.sp-proceso::before { background:#F0C000; }
+.sp-proceso.active { background:#FFF5CC; border-color:#D4A800; }
+
+.sp-propuesta { background:#EEF4FF; color:#2255BB; border-color:#BBCFF0; }
+.sp-propuesta::before { background:#4488EE; }
+.sp-propuesta.active { background:#DDE8FF; border-color:#4488EE; }
+
+.sp-activo { background:#EDFAF2; color:#1A7A3C; border-color:#A8E0BC; }
+.sp-activo::before { background:#22BB66; }
+.sp-activo.active { background:#D5F5E3; border-color:#22BB66; }
+
+.sp-descartado { background:#FFF0F0; color:#BB3333; border-color:#FFBBBB; }
+.sp-descartado::before { background:#CC4444; }
+.sp-descartado.active { background:#FFE0E0; border-color:#CC4444; }
 
 .detail-notes {
-  width:100%; background:var(--dark); border:1px solid var(--gray);
-  border-radius:8px; padding:12px 14px; color:var(--white);
+  width:100%; background:#FFFFFF; border:1.5px solid #D5D2CB;
+  border-radius:8px; padding:12px 14px; color:#1A1A1A;
   font-family:'Outfit',sans-serif; font-size:13px; font-weight:300;
   outline:none; resize:vertical; min-height:80px; line-height:1.5;
   transition:border-color 0.2s; margin-top:8px;
@@ -540,12 +575,12 @@ body { background:var(--charcoal);  color:var(--white); font-family:'Outfit',san
 
 .delete-btn {
   width:100%; padding:12px; background:transparent;
-  border:1px solid rgba(255,50,50,0.3); border-radius:10px;
+  border:1px solid #FFCCCC; border-radius:10px;
   font-family:'Space Mono',monospace; font-size:10px; letter-spacing:2px;
-  color:rgba(255,100,100,0.6); cursor:pointer; margin-top:8px;
+  color:#CC6666; cursor:pointer; margin-top:8px;
   transition:all 0.2s; text-transform:uppercase;
 }
-.delete-btn:hover { background:rgba(255,0,0,0.1); border-color:rgba(255,50,50,0.6); color:rgba(255,100,100,1); }
+.delete-btn:hover { background:#FFF0F0; border-color:#CC0000; color:#CC0000; }
 
 /* ── LOADING ── */
 .loading-state {
@@ -553,7 +588,7 @@ body { background:var(--charcoal);  color:var(--white); font-family:'Outfit',san
   justify-content:center; padding:80px 32px; gap:16px;
 }
 .loading-spinner {
-  width:32px; height:32px; border:2px solid rgba(255,255,255,0.1);
+  width:32px; height:32px; border:2px solid rgba(0,0,0,0.08);
   border-top-color:var(--red); border-radius:50%;
   animation:spin 0.8s linear infinite;
 }
@@ -567,7 +602,7 @@ body { background:var(--charcoal);  color:var(--white); font-family:'Outfit',san
   display:flex; flex-direction:column; align-items:center;
   justify-content:center; padding:80px 32px; gap:12px; text-align:center;
 }
-.empty-icon { font-size:40px; color:var(--gray); }
+.empty-icon { font-size:40px; color:#CCC; }
 .empty-text { font-size:14px; color:#AAA; font-weight:300; }
 
 /* ── VIEW PANELS ── */
@@ -692,13 +727,13 @@ body { background:var(--charcoal);  color:var(--white); font-family:'Outfit',san
           </div>
         </div>
 
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:4px;">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:4px;">
           <div>
-            <p style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:3px;color:var(--red);text-transform:uppercase;margin-bottom:14px;">Últimas empresas</p>
+            <p style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:3px;color:var(--red);text-transform:uppercase;margin-bottom:14px;display:block;">Últimas empresas</p>
             <div id="dash-empresas-list"></div>
           </div>
           <div>
-            <p style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:3px;color:var(--red);text-transform:uppercase;margin-bottom:14px;">Últimos embajadores</p>
+            <p style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:3px;color:var(--red);text-transform:uppercase;margin-bottom:14px;display:block;">Últimos embajadores</p>
             <div id="dash-embajadores-list"></div>
           </div>
         </div>
@@ -980,24 +1015,24 @@ function renderDashboard() {
   const last5em = [...allEmbajadores].reverse().slice(0,5);
 
   eList.innerHTML = last5e.length ? last5e.map(r => `
-    <div onclick="openEmpresaModal('${r.id}')" style="display:flex;align-items:center;gap:12px;padding:12px;background:#FFFFFF;border-radius:10px;margin-bottom:8px;cursor:pointer;transition:background 0.15s;border:1px solid #E0DDD6;" onmouseover="this.style.background='#FAF8F5'" onmouseout="this.style.background='#FFFFFF'">
+    <div onclick="openEmpresaModal('${r.id}')" style="display:flex;align-items:center;gap:12px;padding:12px;background:#FFFFFF;border-radius:10px;margin-bottom:8px;cursor:pointer;transition:all 0.15s;border:1px solid #E0DDD6;" onmouseover="this.style.background='#FAF8F5'" onmouseout="this.style.background='#FFFFFF'">
       <div style="width:6px;height:6px;border-radius:50%;background:var(--red);flex-shrink:0;margin-top:4px;"></div>
       <div style="flex:1;min-width:0;">
-        <p style="font-size:13px;font-weight:500;color:#060606;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${r.fields['Name']||'Sin nombre'}</p>
+        <p style="font-size:14px;font-weight:600;color:#1A1A1A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${r.fields['Name']||'Sin nombre'}</p>
         <p style="font-size:11px;color:#AAA;font-weight:300;">${r.fields['Giro']||'—'}</p>
       </div>
       <span class="status-badge ${getStatusClass(r.fields['Estado'])}">${r.fields['Estado']||'Nuevo'}</span>
-    </div>`).join('') : '<p style="color:var(--mid);font-size:13px;text-align:center;padding:24px;">Sin registros aún</p>';
+    </div>`).join('') : '<p style="color:#AAA;font-size:13px;text-align:center;padding:24px;">Sin registros aún</p>';
 
   emList.innerHTML = last5em.length ? last5em.map(r => `
-    <div onclick="openEmbajadorModal('${r.id}')" style="display:flex;align-items:center;gap:12px;padding:12px;background:#FFFFFF;border-radius:10px;margin-bottom:8px;cursor:pointer;transition:background 0.15s;border:1px solid #E0DDD6;" onmouseover="this.style.background='#FAF8F5'" onmouseout="this.style.background='#FFFFFF'">
+    <div onclick="openEmbajadorModal('${r.id}')" style="display:flex;align-items:center;gap:12px;padding:12px;background:#FFFFFF;border-radius:10px;margin-bottom:8px;cursor:pointer;transition:all 0.15s;border:1px solid #E0DDD6;" onmouseover="this.style.background='#FAF8F5'" onmouseout="this.style.background='#FFFFFF'">
       <div style="width:6px;height:6px;border-radius:50%;background:var(--gray);flex-shrink:0;margin-top:4px;"></div>
       <div style="flex:1;min-width:0;">
-        <p style="font-size:13px;font-weight:500;color:#060606;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${r.fields['Name']||'Sin nombre'}</p>
+        <p style="font-size:14px;font-weight:600;color:#1A1A1A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${r.fields['Name']||'Sin nombre'}</p>
         <p style="font-size:11px;color:var(--red);font-family:'Space Mono',monospace;">${r.fields['Instagram']||'—'}</p>
       </div>
       <p style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:white;">${r.fields['Seguidores']||'—'}</p>
-    </div>`).join('') : '<p style="color:var(--mid);font-size:13px;text-align:center;padding:24px;">Sin registros aún</p>';
+    </div>`).join('') : '<p style="color:#AAA;font-size:13px;text-align:center;padding:24px;">Sin registros aún</p>';
 }
 
 // ── EMPRESAS ──
@@ -1098,34 +1133,44 @@ function openEmpresaModal(id) {
     ]}
   ];
 
-  document.getElementById('modalEmpresaBody').innerHTML = sections.map(s => `
+  const half = Math.ceil(sections.length / 2);
+  const leftSections = sections.slice(0, half);
+  const rightSections = sections.slice(half);
+
+  const renderSection = s => `
     <div class="detail-section">
       <p class="detail-section-title">${s.title}</p>
-      <div class="detail-row" style="grid-template-columns:1fr 1fr;">
+      <div class="detail-row">
         ${s.fields.map(([label, val]) => `
           <div class="detail-field">
             <span class="detail-field-label">${label}</span>
             <p class="detail-field-value ${!val ? 'empty' : ''}">${val || '—'}</p>
           </div>`).join('')}
       </div>
-    </div>`).join('') + `
+    </div>`;
+
+  document.getElementById('modalEmpresaBody').innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0 24px;align-items:start;">
+      <div>${leftSections.map(renderSection).join('')}</div>
+      <div>${rightSections.map(renderSection).join('')}</div>
+    </div>` + `
     <div class="detail-section">
       <p class="detail-section-title">Estado & Notas</p>
-      <span class="detail-field-label">Estado del cliente</span>
-      <select class="status-select" id="empresaStatusSelect" onchange="updateEmpresaStatus('${id}',this.value)">
-        <option ${f['Estado']==='Nuevo'?'selected':''}>Nuevo</option>
-        <option ${f['Estado']==='En proceso'?'selected':''}>En proceso</option>
-        <option ${f['Estado']==='Propuesta enviada'?'selected':''}>Propuesta enviada</option>
-        <option ${f['Estado']==='Cliente activo'?'selected':''}>Cliente activo</option>
-        <option ${f['Estado']==='Descartado'?'selected':''}>Descartado</option>
-      </select>
+      <span class="detail-field-label" style="color:#999;">Estado del cliente</span>
+      <div class="status-picker">
+        <span class="status-pill sp-nuevo ${!f['Estado']||f['Estado']==='Nuevo'?'active':''}" onclick="updateEmpresaStatus('${id}','Nuevo',this)">Nuevo</span>
+        <span class="status-pill sp-proceso ${f['Estado']==='En proceso'?'active':''}" onclick="updateEmpresaStatus('${id}','En proceso',this)">En proceso</span>
+        <span class="status-pill sp-propuesta ${f['Estado']==='Propuesta enviada'?'active':''}" onclick="updateEmpresaStatus('${id}','Propuesta enviada',this)">Propuesta enviada</span>
+        <span class="status-pill sp-activo ${f['Estado']==='Cliente activo'?'active':''}" onclick="updateEmpresaStatus('${id}','Cliente activo',this)">Cliente activo</span>
+        <span class="status-pill sp-descartado ${f['Estado']==='Descartado'?'active':''}" onclick="updateEmpresaStatus('${id}','Descartado',this)">Descartado</span>
+      </div>
       <button class="delete-btn" onclick="deleteRecord('empresa','${id}')">✕ Eliminar registro</button>
     </div>`;
 
   document.getElementById('modalEmpresa').classList.add('open');
 }
 
-async function updateEmpresaStatus(id, status) {
+async function updateEmpresaStatus(id, status, pillEl) {
   await updateRecord(TABLE_EMPRESAS, id, { 'Estado': status });
   const r = allEmpresas.find(e => e.id === id);
   if (r) r.fields['Estado'] = status;
@@ -1135,6 +1180,11 @@ async function updateEmpresaStatus(id, status) {
   const statusEl = document.getElementById('modalEmpresaStatus');
   statusEl.textContent = status;
   statusEl.className = 'status-badge ' + getStatusClass(status);
+  // Update pills active state
+  if (pillEl) {
+    pillEl.closest('.status-picker').querySelectorAll('.status-pill').forEach(p => p.classList.remove('active'));
+    pillEl.classList.add('active');
+  }
 }
 
 // ── EMBAJADORES ──
@@ -1252,13 +1302,13 @@ function openEmbajadorModal(id) {
     </div>
     <div class="detail-section">
       <p class="detail-section-title">Estado</p>
-      <select class="status-select" onchange="updateEmbajadorStatus('${id}',this.value)">
-        <option ${f['Estado']==='Nuevo'?'selected':''}>Nuevo</option>
-        <option ${f['Estado']==='Activo'?'selected':''}>Activo</option>
-        <option ${f['Estado']==='En campaña'?'selected':''}>En campaña</option>
-        <option ${f['Estado']==='Pausado'?'selected':''}>Pausado</option>
-        <option ${f['Estado']==='Descartado'?'selected':''}>Descartado</option>
-      </select>
+      <div class="status-picker">
+        <span class="status-pill sp-nuevo ${!f['Estado']||f['Estado']==='Nuevo'?'active':''}" onclick="updateEmbajadorStatus('${id}','Nuevo',this)">Nuevo</span>
+        <span class="status-pill sp-activo ${f['Estado']==='Activo'?'active':''}" onclick="updateEmbajadorStatus('${id}','Activo',this)">Activo</span>
+        <span class="status-pill sp-propuesta ${f['Estado']==='En campaña'?'active':''}" onclick="updateEmbajadorStatus('${id}','En campaña',this)">En campaña</span>
+        <span class="status-pill sp-proceso ${f['Estado']==='Pausado'?'active':''}" onclick="updateEmbajadorStatus('${id}','Pausado',this)">Pausado</span>
+        <span class="status-pill sp-descartado ${f['Estado']==='Descartado'?'active':''}" onclick="updateEmbajadorStatus('${id}','Descartado',this)">Descartado</span>
+      </div>
       <button class="delete-btn" onclick="deleteRecord('embajador','${id}')">✕ Eliminar registro</button>
     </div>`;
 
@@ -1334,7 +1384,7 @@ function clearEmbajadorFilters() {
   applyEmbajadorFilters();
 }
 
-async function updateEmbajadorStatus(id, status) {
+async function updateEmbajadorStatus(id, status, pillEl) {
   await updateRecord(TABLE_EMBAJADORES, id, { 'Estado': status });
   const r = allEmbajadores.find(e => e.id === id);
   if (r) r.fields['Estado'] = status;
@@ -1343,6 +1393,10 @@ async function updateEmbajadorStatus(id, status) {
   const statusEl = document.getElementById('modalEmbajadorStatus');
   statusEl.textContent = status;
   statusEl.className = 'status-badge ' + getEmbajadorStatusClass(status);
+  if (pillEl) {
+    pillEl.closest('.status-picker').querySelectorAll('.status-pill').forEach(p => p.classList.remove('active'));
+    pillEl.classList.add('active');
+  }
 }
 
 // ── FILTERS ──
