@@ -1,0 +1,6 @@
+{
+  "rewrites": [
+    { "source": "/api/airtable/:path*", "destination": "/api/airtable/[...path]" },
+    { "source": "/api/submit/:form", "destination": "/api/submit/[form]" }
+  ]
+}
