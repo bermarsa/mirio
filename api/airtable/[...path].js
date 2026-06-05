@@ -20,17 +20,16 @@ export default async function handler(req, res) {
     return res.status(401).send('No autorizado');
   }
 
-  // 3) Reconstruir la ruta hacia Airtable desde el catch-all
-  const segs = Array.isArray(req.query.path) ? req.query.path : (req.query.path ? [req.query.path] : []);
-  const sub = segs.join('/');
-  if (!sub) return res.status(400).send('Ruta vacía');
-
-  const params = new URLSearchParams();
-  for (const [k, v] of Object.entries(req.query)) {
-    if (k === 'path') continue;
-    if (Array.isArray(v)) v.forEach(x => params.append(k, x));
-    else params.append(k, v);
+  // 3) Reconstruir la ruta hacia Airtable (robusto: usa la URL completa)
+  const parsed = new URL(req.url, 'http://x');
+  let sub = parsed.pathname.replace(/^\/api\/airtable\/?/, '').replace(/^\/+/, '');
+  if (!sub && req.query && req.query.path) {
+    sub = Array.isArray(req.query.path) ? req.query.path.join('/') : String(req.query.path);
   }
+  if (!sub) return res.status(400).send('Ruta vacía (url=' + req.url + ')');
+
+  const params = parsed.searchParams;
+  params.delete('path'); // parámetro interno del catch-all, no va a Airtable
   const qs = params.toString();
   const target = `https://api.airtable.com/v0/${BASE_ID}/${sub}${qs ? '?' + qs : ''}`;
 
