@@ -36,9 +36,11 @@ export default async function handler(req, res) {
   // 4) Reenviar a Airtable con el token real
   const init = {
     method: req.method,
-    headers: { 'Authorization': `Bearer ${AIRTABLE_TOKEN}`, 'Content-Type': 'application/json' },
+    headers: { 'Authorization': `Bearer ${AIRTABLE_TOKEN}` },
   };
-  if (!['GET', 'HEAD'].includes(req.method) && req.body != null) {
+  // Solo POST/PATCH/PUT llevan cuerpo; DELETE/GET/HEAD van limpios
+  if (!['GET', 'HEAD', 'DELETE'].includes(req.method) && req.body != null) {
+    init.headers['Content-Type'] = 'application/json';
     init.body = typeof req.body === 'string' ? req.body : JSON.stringify(req.body);
   }
 
