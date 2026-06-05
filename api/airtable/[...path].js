@@ -16,6 +16,7 @@ export default async function handler(req, res) {
   // 2) Validar contraseña
   const key = req.headers['x-app-key'] || '';
   if (key !== APP_PASSWORD) {
+    res.setHeader('x-mirio-auth', 'rejected');
     return res.status(401).send('No autorizado');
   }
 
